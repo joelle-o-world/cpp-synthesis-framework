@@ -6,12 +6,12 @@ const float PHI = 2.0 * PI;
 
 // Constructors
 Osc::Osc() {
-  outlets.push_back(&output);
+  addOutlet(output);
 }
 
 Osc::Osc(float f) {
   frequency = f;
-  outlets.push_back(&output);
+  addOutlet(output);
 }
 
 // Processing audio

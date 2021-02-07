@@ -12,4 +12,6 @@ public:
   float* buffer;
   Process* owner;
   std::vector<Inlet*> connectedTo;
+
+  int numberOfConnections();
 };

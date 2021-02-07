@@ -27,4 +27,7 @@ class Process {
 
     int numberOfInlets();
     int numberOfOutlets();
+
+    void addInlet(Inlet& inlet);
+    void addOutlet(Outlet& outlet);
 };
