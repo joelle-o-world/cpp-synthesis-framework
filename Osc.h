@@ -6,8 +6,14 @@ class Osc: public Process {
   private:
     float phase;
   public:
+    // Constructors
+    Osc();
+    Osc(float frequency);
+
+    // IO
     float frequency;
-    const static int numberOfInlets = 0;
-    const static int numberOfOutlets = 1;
+    Outlet output;
+
+    // Processing
     void process() ;
 };

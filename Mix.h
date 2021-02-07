@@ -6,7 +6,14 @@ class Process;
 
 class Mix: public Process {
   public:
-    const static int numberOfInlets = 2;
-    const static int numberOfOutlets = 1;
+    // Constructors
+    Mix();
+
+    // IO
+    Inlet a;
+    Inlet b;
+    Outlet out;
+
+    // Processing 
     void process() ;
 };

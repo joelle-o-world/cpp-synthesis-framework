@@ -7,8 +7,8 @@ Outlet* Process::mainOutlet() {
 
 std::vector<Process*>* Process::dependentProcesses() {
   std::vector<Process*> * list = new std::vector<Process*>;
-  Outlet* outlet = *outlets;
-  for(int i=0; i < numberOfOutlets; ++i, ++outlet) {
+  //Outlet* outlet = *outlets;
+  for(Outlet* outlet : outlets) {
 
     for(Inlet* inlet : outlet->connectedTo) {
       if(std::find(list->begin(), list->end(), inlet -> owner) != list->end())
@@ -21,4 +21,12 @@ std::vector<Process*>* Process::dependentProcesses() {
 
 void Process::process() {
   throw "This shouldn't be called";
+}
+
+int Process::numberOfInlets() {
+  return inlets.size();
+}
+
+int Process::numberOfOutlets() {
+  return outlets.size();
 }

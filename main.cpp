@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Osc.h"
 #include "Mix.h"
 #include "routing.h"
@@ -14,6 +15,17 @@ int main() {
   connect(osc1.outlets[0], mix1.inlets[0]);
   connect(osc2.outlets[0], mix1.inlets[1]);
 
+  std::cout << "It worked?\n";
+
+  std::cout << "osc1 has " << osc1.numberOfInlets() << " inlets.\n";
+  std::cout << "osc2 has " << osc2.numberOfInlets() << " inlets.\n";
+  std::cout << "mix1 has " << mix1.numberOfInlets() << " inlets.\n";
+  std::cout << "osc1 has " << osc1.numberOfOutlets() << " outlets.\n";
+  std::cout << "osc2 has " << osc2.numberOfOutlets() << " outlets.\n";
+  std::cout << "mix1 has " << mix1.numberOfOutlets() << " outlets.\n";
+
+
+  
 
   return 0;
 }

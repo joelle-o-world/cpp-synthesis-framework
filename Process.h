@@ -13,19 +13,18 @@ class Outlet;
 
 class Process {
   public:
-    const static int numberOfInlets = 0;
-
     // Array of inlets belonging to the component
-    Inlet** inlets;
-
-    const static int numberOfOutlets = 0;
+    std::vector<Inlet*> inlets;
 
     // Array of outlets belonging to the component
-    Outlet** outlets;
+    std::vector<Outlet*> outlets;
 
     virtual void process();
 
     Outlet* mainOutlet();
 
     std::vector<Process*>* dependentProcesses();
+
+    int numberOfInlets();
+    int numberOfOutlets();
 };
