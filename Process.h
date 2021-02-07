@@ -5,24 +5,27 @@
 #include "Outlet.h"
 #include "Inlet.h"
 
+#define CHUNK_SIZE 256
+const int SAMPLE_RATE = 44100;
+
 class Inlet;
 class Outlet;
 
 class Process {
   public:
-    const static int numberOfInlets;
+    const static int numberOfInlets = 0;
 
     // Array of inlets belonging to the component
     Inlet** inlets;
 
-    const static int numberOfOutlets;
+    const static int numberOfOutlets = 0;
 
     // Array of outlets belonging to the component
     Outlet** outlets;
 
-    void process();
+    virtual void process();
 
     Outlet* mainOutlet();
 
-    std::vector<Process*> dependentProcesses();
+    std::vector<Process*>* dependentProcesses();
 };
