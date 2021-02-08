@@ -5,9 +5,6 @@ Mix::Mix() {
   addInlet(a);
   addInlet(b);
   addOutlet(out);
-  inlets.push_back(&a);
-  inlets.push_back(&b);
-  outlets.push_back(&out);
 }
 
 void Mix::process() {

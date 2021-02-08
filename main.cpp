@@ -26,6 +26,9 @@ int main() {
 
   auto dependents = osc1.dependentProcesses();
   //std::cout << "Mix 1 has " << mix1.dependentProcesses()->size() << " dependent processes.\n";
+  //
+
+  std::cout << "osc1 has " << dependents->size() << " dependent processes.\n";
 
   
 

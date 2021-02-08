@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <set>
 
 #include "Outlet.h"
 #include "Inlet.h"
@@ -23,7 +24,7 @@ class Process {
 
     Outlet* mainOutlet();
 
-    std::vector<Process*>* dependentProcesses();
+    std::set<Process*>* dependentProcesses();
 
     int numberOfInlets();
     int numberOfOutlets();

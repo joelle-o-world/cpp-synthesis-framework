@@ -1,5 +1,4 @@
 #include "Process.h"
-#include <iostream>
 
 
 void Process::addInlet(Inlet& inlet) {
@@ -16,16 +15,11 @@ Outlet* Process::mainOutlet() {
   return outlets[0];
 }
 
-std::vector<Process*>* Process::dependentProcesses() {
-  std::vector<Process*> * list = new std::vector<Process*>;
-  //Outlet* outlet = *outlets;
+std::set<Process*>* Process::dependentProcesses() {
+  std::set<Process*> * list = new std::set<Process*>;
   for(Outlet* outlet : outlets) {
-    std::cout << "Outlet has " << outlet->numberOfConnections() << " connections.\n";
-
     for(Inlet* inlet : outlet->connectedTo) {
-      std::cout << "Inlet owner:" << inlet->owner;
-      if(std::find(list->begin(), list->end(), inlet -> owner) != list->end())
-        list->push_back(inlet->owner);
+      list->insert(inlet->owner);
     }
   }
 
