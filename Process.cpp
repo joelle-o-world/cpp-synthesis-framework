@@ -1,5 +1,10 @@
 #include "Process.h"
 
+// Constructors
+
+Process::Process()
+  : process_id(processCount++)
+{}
 
 void Process::addInlet(Inlet& inlet) {
   inlets.push_back(&inlet);
@@ -28,7 +33,6 @@ std::set<Process*>* Process::dependentProcesses() {
 
 
 void Process::process() {
-  throw "This shouldn't be called";
 }
 
 int Process::numberOfInlets() {

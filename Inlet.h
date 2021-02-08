@@ -11,6 +11,6 @@ public:
   float* buffer;
   Process* owner;
   Outlet* connectedTo;
-  bool isConnected;
-  bool dontWriteInPlace;
+  bool isConnected = false;
+  bool dontWriteInPlace = false;
 };
