@@ -2,7 +2,6 @@
 #include "Osc.h"
 #include "Mix.h"
 #include "routing.h"
-#include "calculatePriority.h"
 
 int main() {
     
@@ -34,9 +33,9 @@ int main() {
     std::cout << "osc1 has " << dependents->size() << " dependent processes.\n";
 
 
-    std::cout << "osc1.priority: " << calculatePriority(osc1, Trace()) << std::endl;
-    std::cout << "osc2.priority: " << calculatePriority(osc2, Trace()) << std::endl;
-    std::cout << "mix1.priority: " << calculatePriority(mix1, Trace()) << std::endl;
+    std::cout << "mix1.priority: " << mix1.getPriority('a') << std::endl;
+    std::cout << "osc1.priority: " << osc1.getPriority('a') << std::endl;
+    std::cout << "osc2.priority: " << osc2.getPriority('a') << std::endl;
 
     
   } catch(const char* e) {

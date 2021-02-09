@@ -1,7 +1,8 @@
 #include "Process.h"
 
-// Constructors
+int processCount = 0;
 
+// Constructors
 Process::Process()
   : process_id(processCount++)
 {}
@@ -41,4 +42,24 @@ int Process::numberOfInlets() {
 
 int Process::numberOfOutlets() {
   return outlets.size();
+}
+
+int Process::getPriority(char generation) {
+  if(generation == priority_generation) {
+    return priority;
+  } else {
+    recalculatePriority(generation);
+    return priority;
+  }
+}
+
+
+void Process::recalculatePriority(char generation) {
+  priority_generation = generation;
+  priority = 0;
+  for(Process* p : *dependentProcesses()) {
+    int pPriority = p -> getPriority(generation);
+    if(pPriority + 1 > priority)
+      priority = pPriority + 1;
+  }
 }
