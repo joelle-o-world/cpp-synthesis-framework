@@ -51,11 +51,12 @@ int Process::numberOfOutlets() {
 }
 
 int Process::getPriority(int generation) {
+  if(isFinalProcess)
+    return 0;
+
   if(generation == priority_generation) {
-    std::cout << name() << ".getPriority(" << generation << " vs " << priority_generation << ") = " << priority << '\n';
     return priority;
   } else {
-    std::cout << name() << ".getPriority(" << generation << " vs " << priority_generation << ") ~~ Recalculating\n";
     recalculatePriority(generation);
 
     return priority;
@@ -64,8 +65,6 @@ int Process::getPriority(int generation) {
 
 
 void Process::recalculatePriority(int generation) {
-  std::cout << name() << ".recalculatePriority(" << generation << ")\n";
-
   priority_generation = generation;
   priority = 0;
   int max = 0;
@@ -82,3 +81,4 @@ void Process::recalculatePriority(int generation) {
 
   priority = max;
 }
+

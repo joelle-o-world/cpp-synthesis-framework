@@ -25,6 +25,8 @@ class Process {
   public:
     // Constructors
     Process();
+
+    bool isFinalProcess = false;
     
     // Identification
     std::string name();
