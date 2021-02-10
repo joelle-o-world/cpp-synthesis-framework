@@ -66,6 +66,7 @@ void Test_AssigningPrioritiesWithFeedback2() {
   
 }
 
+
 void Test_ConnectFunction() {
   Mix a, b, c, d, e, f;
 
@@ -98,6 +99,42 @@ void Test_ConnectFunction() {
 
 }
 
+
+void Test_ProcessNeighbours() {
+  H("Process::neihbours()");
+
+  Mix a,b,c,d,e;
+
+  connect(&a, &c);
+  connect(&b, &c);
+  connect(&c, &d);
+  connect(&d, &e);
+  connect(&e, &b);
+
+  auto aNeighbours = a.neighbours();
+  assert(aNeighbours->find(&c) != aNeighbours->end());
+
+  auto bNeighbours = b.neighbours();
+  assert(bNeighbours->find(&c) != bNeighbours->end());
+  assert(bNeighbours->find(&e) != bNeighbours->end());
+
+  auto cNeighbours = c.neighbours();
+  assert(cNeighbours->find(&a) != cNeighbours->end());
+  assert(cNeighbours->find(&b) != cNeighbours->end());
+  assert(cNeighbours->find(&d) != cNeighbours->end());
+
+  auto dNeighbours = d.neighbours();
+  assert(dNeighbours->find(&c) != dNeighbours->end());
+  assert(dNeighbours->find(&e) != dNeighbours->end());
+
+
+  auto eNeighbours = e.neighbours();
+  assert(eNeighbours->find(&d) != eNeighbours->end());
+  assert(eNeighbours->find(&b) != eNeighbours->end());
+
+  // TODO: Add some negative assertions.
+}
+
 int main() {
 
   try {
@@ -106,6 +143,7 @@ int main() {
     Test_AssigningPrioritiesWithFeedback();
     Test_AssigningPrioritiesWithFeedback2();
     Test_ConnectFunction();
+    Test_ProcessNeighbours();
 
   } catch(char const * msg) {
     std::cerr << RED << "Test failed: " << msg << std::endl;

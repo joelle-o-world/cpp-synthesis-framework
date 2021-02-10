@@ -44,7 +44,9 @@ class Process {
 
     Inlet* firstFreeInlet();
 
+    // Navigating the signal graph
     std::set<Process*>* dependentProcesses();
+    std::set<Process*>* neighbours();
 
     int numberOfInlets();
     int numberOfOutlets();
@@ -54,5 +56,4 @@ class Process {
 
     int getPriority(int generation = 0);
     void recalculatePriority(int generation = 0);
-
 };

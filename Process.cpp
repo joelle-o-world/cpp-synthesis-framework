@@ -52,6 +52,23 @@ std::set<Process*>* Process::dependentProcesses() {
   return list;
 }
 
+std::set<Process*>* Process::neighbours() {
+  std::set<Process*> * list = new std::set<Process*>;
+
+  for(Outlet* outlet : outlets) {
+    for(Inlet* inlet : outlet->connectedTo) {
+      list->insert(inlet->owner);
+    }
+  }
+
+  for(Inlet* inlet : inlets) {
+    if(inlet->isConnected)
+      list->insert(inlet->connectedTo->owner);
+  }
+
+  return list;
+}
+
 
 void Process::process() {
 }
