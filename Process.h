@@ -24,6 +24,9 @@ class Process {
   public:
     // Constructors
     Process();
+    
+    // Identification
+    char *name();
 
     // Array of inlets belonging to the component
     std::vector<Inlet*> inlets;

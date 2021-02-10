@@ -1,4 +1,5 @@
 #include "Process.h"
+#include <iostream>
 
 int processCount = 0;
 
@@ -46,20 +47,31 @@ int Process::numberOfOutlets() {
 
 int Process::getPriority(char generation) {
   if(generation == priority_generation) {
+    //std::cout << "Process " << process_id << " -> getPriority(" << generation << ") = " << priority << std::endl;
     return priority;
   } else {
     recalculatePriority(generation);
+
+    //std::cout << "Process " << process_id << " -> getPriority(" << generation << ") = " << priority << std::endl;
     return priority;
   }
 }
 
 
 void Process::recalculatePriority(char generation) {
+  //std::cout << "Process " << process_id << " -> recalculatePriority(" << generation << ")\n";
+
   priority_generation = generation;
   priority = 0;
+  int max = 0;
   for(Process* p : *dependentProcesses()) {
+    if(p == this)
+      continue;
+
     int pPriority = p -> getPriority(generation);
-    if(pPriority + 1 > priority)
-      priority = pPriority + 1;
+    if(pPriority + 1 > max)
+      max = pPriority + 1;
   }
+
+  priority = max;
 }

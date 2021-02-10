@@ -17,14 +17,13 @@ int main() {
     connect(osc1.outlets[0], mix1.inlets[0]);
     connect(osc2.outlets[0], mix1.inlets[1]);
 
+
+    //std::cout << "Connecting feedback on osc1\n";
+    //connect(mix1.outlets[0], mix1.inlets[0]);
+    //std::cout << "feedback on osc1 done\n";
+
     std::cout << "It worked?\n";
 
-    std::cout << "osc1 has " << osc1.numberOfInlets() << " inlets.\n";
-    std::cout << "osc2 has " << osc2.numberOfInlets() << " inlets.\n";
-    std::cout << "mix1 has " << mix1.numberOfInlets() << " inlets.\n";
-    std::cout << "osc1 has " << osc1.numberOfOutlets() << " outlets.\n";
-    std::cout << "osc2 has " << osc2.numberOfOutlets() << " outlets.\n";
-    std::cout << "mix1 has " << mix1.numberOfOutlets() << " outlets.\n";
 
     auto dependents = osc1.dependentProcesses();
     //std::cout << "Mix 1 has " << mix1.dependentProcesses()->size() << " dependent processes.\n";
@@ -33,9 +32,9 @@ int main() {
     std::cout << "osc1 has " << dependents->size() << " dependent processes.\n";
 
 
-    std::cout << "mix1.priority: " << mix1.getPriority('a') << std::endl;
     std::cout << "osc1.priority: " << osc1.getPriority('a') << std::endl;
     std::cout << "osc2.priority: " << osc2.getPriority('a') << std::endl;
+    std::cout << "mix1.priority: " << mix1.getPriority('a') << std::endl;
 
     
   } catch(const char* e) {
