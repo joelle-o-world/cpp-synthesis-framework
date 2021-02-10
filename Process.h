@@ -19,7 +19,7 @@ class Process {
   private:
     const int process_id;
     int priority;
-    char priority_generation;
+    int priority_generation;
     virtual inline std::string process_type() { return "process"; };
 
   public:
@@ -47,7 +47,7 @@ class Process {
     void addInlet(Inlet& inlet);
     void addOutlet(Outlet& outlet);
 
-    int getPriority(char generation = 0);
-    void recalculatePriority(char generation = 0);
+    int getPriority(int generation = 0);
+    void recalculatePriority(int generation = 0);
 
 };

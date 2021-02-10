@@ -50,7 +50,7 @@ int Process::numberOfOutlets() {
   return outlets.size();
 }
 
-int Process::getPriority(char generation) {
+int Process::getPriority(int generation) {
   if(generation == priority_generation) {
     std::cout << name() << ".getPriority(" << generation << " vs " << priority_generation << ") = " << priority << '\n';
     return priority;
@@ -63,7 +63,7 @@ int Process::getPriority(char generation) {
 }
 
 
-void Process::recalculatePriority(char generation) {
+void Process::recalculatePriority(int generation) {
   std::cout << name() << ".recalculatePriority(" << generation << ")\n";
 
   priority_generation = generation;
@@ -74,9 +74,11 @@ void Process::recalculatePriority(char generation) {
       continue;
 
     int pPriority = p -> getPriority(generation);
-    if(generation != priority_generation && pPriority + 1 > max)
+    if(pPriority + 1 > max)
       max = pPriority + 1;
   }
+
+  
 
   priority = max;
 }
