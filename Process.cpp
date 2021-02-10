@@ -8,6 +8,11 @@ Process::Process()
   : process_id(processCount++)
 {}
 
+// Identification
+std::string Process::name() {  
+  return std::to_string(process_id) + "_" + process_type();
+} 
+
 void Process::addInlet(Inlet& inlet) {
   inlets.push_back(&inlet);
   inlet.owner = this;

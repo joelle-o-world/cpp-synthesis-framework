@@ -20,13 +20,14 @@ class Process {
     const int process_id;
     int priority;
     char priority_generation;
+    virtual inline std::string process_type() { return "process"; };
 
   public:
     // Constructors
     Process();
     
     // Identification
-    char *name();
+    std::string name();
 
     // Array of inlets belonging to the component
     std::vector<Inlet*> inlets;
