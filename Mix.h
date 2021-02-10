@@ -9,6 +9,8 @@ class Mix: public Process {
     // Constructors
     Mix();
 
+    inline std::string process_type() { return "mix"; };
+
     // IO
     Inlet a;
     Inlet b;
