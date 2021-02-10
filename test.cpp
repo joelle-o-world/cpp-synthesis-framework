@@ -36,10 +36,38 @@ void Test_AssigningPrioritiesWithFeedback() {
   assert(mix1.getPriority('x') == 0);
 }
 
+void Test_AssigningPrioritiesWithFeedback2() {
+  // With one process
+  Mix mix1, mix2, mix3;
+
+  // 3 Oscs connected in a circle..
+  // ||: --> mix3 --> mix2 --> mix1 --> :||
+  connect(mix3.outlets[0], mix2.inlets[0]);
+  connect(mix2.outlets[0], mix1.inlets[0]);
+  connect(mix1.outlets[0], mix3.inlets[0]);
+
+  // Starting from mix1
+  assert(mix1.getPriority('x') == 0);
+  assert(mix2.getPriority('x') == 1);
+  assert(mix3.getPriority('x') == 2);
+  
+  // Starting from mix2
+  cout << "mix2.getPriority('y') = " << mix2.getPriority('y') << '\n';
+  assert(mix2.getPriority('y') == 0); // ERROR
+  assert(mix3.getPriority('y') == 1);
+  assert(mix1.getPriority('y') == 2);
+
+  // Starting from mix1
+  assert(mix3.getPriority('z') == 0);
+  assert(mix1.getPriority('z') == 1);
+  assert(mix2.getPriority('z') == 2);
+}
+
 int main() {
   try {
     Test_AssigningPrioritiesWithSimpleCircuit();
     Test_AssigningPrioritiesWithFeedback();
+    Test_AssigningPrioritiesWithFeedback2();
 
   } catch(char * msg) {
     std::cerr << RED << "Test failed: " << msg << std::endl;
