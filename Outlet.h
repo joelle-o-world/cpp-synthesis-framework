@@ -14,4 +14,9 @@ public:
   std::vector<Inlet*> connectedTo;
 
   int numberOfConnections();
+
+  bool isConnectedTo(Inlet * inlet);
+
+  int index();
+  std::string name();
 };
