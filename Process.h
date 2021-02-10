@@ -40,6 +40,9 @@ class Process {
     virtual void process();
 
     Outlet* mainOutlet();
+    Inlet* mainInlet();
+
+    Inlet* firstFreeInlet();
 
     std::set<Process*>* dependentProcesses();
 

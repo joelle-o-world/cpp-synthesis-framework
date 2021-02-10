@@ -27,6 +27,20 @@ Outlet* Process::mainOutlet() {
   return outlets[0];
 }
 
+Inlet* Process::mainInlet() {
+  return inlets[0];
+}
+
+Inlet* Process::firstFreeInlet() {
+  for(Inlet* inlet : inlets) {
+    if(inlet -> isFree())
+      return inlet;
+  }
+
+  // Otherwise
+  throw name() + " has no free inlets (call to firstFreeInlet)";
+}
+
 std::set<Process*>* Process::dependentProcesses() {
   std::set<Process*> * list = new std::set<Process*>;
   for(Outlet* outlet : outlets) {

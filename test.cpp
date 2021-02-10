@@ -66,6 +66,38 @@ void Test_AssigningPrioritiesWithFeedback2() {
   
 }
 
+void Test_ConnectFunction() {
+  Mix a, b, c, d, e, f;
+
+  // Connecting outlet pointer to inlet pointer
+  P("Connecting " + a.name() + " -> " + b.name());
+  connect(a.outlets[0], b.inlets[0]);
+  checkConnection(a.outlets[0], b.inlets[0]);
+
+  // connecting outlet pointer to process pointer
+  P("Connecting " + b.name() + " -> " + c.name());
+  connect(b.outlets[0], &c);
+  checkConnection(b.outlets[0], c.inlets[0]);
+
+  // connecting process pointer to inlet pointer
+  P("Connecting " + c.name() + " -> " + d.name());
+  connect(&c, d.inlets[0]);
+  checkConnection(c.outlets[0], d.inlets[0]);
+
+  // connecting process pointer to process pointer
+  P("Connecting " + d.name() + " (d) -> " + e.name());
+  connect(&d, &e);
+  checkConnection(d.outlets[0], e.inlets[0]);
+
+
+  // connecting to second inlet using process pointer
+  P("Connecting " + f.outlets[0]->name() + " -> " + e.inlets[1]->name());
+  connect(&f, &e);
+  checkConnection(f.outlets[0], e.inlets[1]);
+
+
+}
+
 int main() {
 
   try {
@@ -73,8 +105,12 @@ int main() {
     Test_AssigningPrioritiesWithSimpleCircuit();
     Test_AssigningPrioritiesWithFeedback();
     Test_AssigningPrioritiesWithFeedback2();
+    Test_ConnectFunction();
 
-  } catch(char * msg) {
+  } catch(char const * msg) {
+    std::cerr << RED << "Test failed: " << msg << std::endl;
+    return 1;
+  } catch(std::string msg) {
     std::cerr << RED << "Test failed: " << msg << std::endl;
     return 1;
   }
