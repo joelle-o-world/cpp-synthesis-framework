@@ -22,6 +22,10 @@ class Process {
     int priority_generation;
     virtual inline std::string process_type() { return "process"; };
 
+  protected:
+    void addInlet(Inlet& inlet);
+    void addOutlet(Outlet& outlet);
+
   public:
     // Constructors
     Process();
@@ -51,8 +55,6 @@ class Process {
     int numberOfInlets();
     int numberOfOutlets();
 
-    void addInlet(Inlet& inlet);
-    void addOutlet(Outlet& outlet);
 
     int getPriority(int generation = 0);
     void recalculatePriority(int generation = 0);
