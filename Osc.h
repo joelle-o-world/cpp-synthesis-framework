@@ -10,7 +10,7 @@ class Osc: public Process {
     Osc();
     Osc(float frequency);
 
-    inline std::string process_type() { return "mix"; };
+    inline std::string process_type() { return "osc"; };
 
     // IO
     float frequency;
