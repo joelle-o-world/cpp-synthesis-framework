@@ -1,8 +1,10 @@
 #include <iostream>
 #include <assert.h>
+
 #include "Osc.h"
 #include "Mix.h"
 #include "routing.h"
+#include "explore.h"
 
 using std::cout;
 
@@ -101,7 +103,7 @@ void Test_ConnectFunction() {
 
 
 void Test_ProcessNeighbours() {
-  H("Process::neihbours()");
+  H("Process::neighbours()");
 
   Mix a,b,c,d,e;
 
@@ -135,6 +137,51 @@ void Test_ProcessNeighbours() {
   // TODO: Add some negative assertions.
 }
 
+void Test_ExploringCircuits() {
+  Mix a,b,c,d,e, f;
+
+  connect(&a, &c);
+  connect(&b, &c);
+  connect(&c, &d);
+  connect(&d, &e);
+  connect(&e, &b);
+
+  std::vector<Process*>* all = explore(&a);
+  assert(all->size() == 5);
+  assert(find(all->begin(), all->end(), &a) != all->end());
+  assert(find(all->begin(), all->end(), &b) != all->end());
+  assert(find(all->begin(), all->end(), &c) != all->end());
+  assert(find(all->begin(), all->end(), &d) != all->end());
+  assert(find(all->begin(), all->end(), &e) != all->end());
+  assert(find(all->begin(), all->end(), &f) == all->end());
+  delete all;
+
+  all = explore(&c);
+  assert(all->size() == 5);
+  assert(find(all->begin(), all->end(), &a) != all->end());
+  assert(find(all->begin(), all->end(), &b) != all->end());
+  assert(find(all->begin(), all->end(), &c) != all->end());
+  assert(find(all->begin(), all->end(), &d) != all->end());
+  assert(find(all->begin(), all->end(), &e) != all->end());
+  assert(find(all->begin(), all->end(), &f) == all->end());
+  delete all;
+
+  all = explore(&d);
+  assert(all->size() == 5);
+  assert(find(all->begin(), all->end(), &a) != all->end());
+  assert(find(all->begin(), all->end(), &b) != all->end());
+  assert(find(all->begin(), all->end(), &c) != all->end());
+  assert(find(all->begin(), all->end(), &d) != all->end());
+  assert(find(all->begin(), all->end(), &e) != all->end());
+  assert(find(all->begin(), all->end(), &f) == all->end());
+  delete all;
+
+  all = explore(&f);
+  assert(all->size() == 1);
+  assert((*all)[0] == &f);
+  delete all;
+}
+
 int main() {
 
   try {
@@ -144,6 +191,7 @@ int main() {
     Test_AssigningPrioritiesWithFeedback2();
     Test_ConnectFunction();
     Test_ProcessNeighbours();
+    Test_ExploringCircuits();
 
   } catch(char const * msg) {
     std::cerr << RED << "Test failed: " << msg << std::endl;
