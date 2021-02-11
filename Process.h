@@ -65,3 +65,5 @@ class Process {
 
 
 bool sort_by_priority(Process* r, Process* l);
+
+void sortProcesses(std::vector<Process*>& processes);

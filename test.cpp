@@ -195,11 +195,7 @@ void Test_SortingByPriority() {
 
   auto allProcesses = explore(&a);
 
-  std::sort(
-      allProcesses->begin(), 
-      allProcesses->end(), 
-      sort_by_priority
-  );
+  sortProcesses(*allProcesses);
 
   for(auto p : *allProcesses)
     cout << p->name() << '\n';

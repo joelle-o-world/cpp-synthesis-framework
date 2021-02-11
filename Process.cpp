@@ -117,3 +117,11 @@ void Process::recalculatePriority(int generation) {
 bool sort_by_priority(Process* l, Process* r) {
   return l->priority > r->priority;
 }
+
+void sortProcesses(std::vector<Process*>& processes) {
+  std::sort(
+      processes.begin(), 
+      processes.end(), 
+      sort_by_priority
+  );
+}
