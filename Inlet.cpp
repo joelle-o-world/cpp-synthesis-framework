@@ -20,7 +20,7 @@ int Inlet::index() {
 
 std::string Inlet::name() {
   if(owner) {
-    return owner->name() + ".in" + std::to_string(index());
+    return owner->name() + ".i" + std::to_string(index());
   } else
     return "unclaimed-intlet";
 }

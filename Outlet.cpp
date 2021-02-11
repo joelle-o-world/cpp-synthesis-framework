@@ -27,7 +27,7 @@ int Outlet::index() {
 
 std::string Outlet::name() {
   if(owner) {
-    return owner->name() + ".out" + std::to_string(index()); 
+    return owner->name() + ".o" + std::to_string(index()); 
   } else
     return "unclaimed-intlet";
 }
