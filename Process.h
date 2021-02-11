@@ -3,6 +3,7 @@
 #include <vector>
 #include <set>
 #include <string>
+#include <iostream>
 
 #include "Outlet.h"
 #include "Inlet.h"
@@ -58,4 +59,9 @@ class Process {
 
     int getPriority(int generation = 0);
     void recalculatePriority(int generation = 0);
+
+    friend bool sort_by_priority(Process* r, Process* l);
 };
+
+
+bool sort_by_priority(Process* r, Process* l);

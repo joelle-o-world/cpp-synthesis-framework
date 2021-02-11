@@ -113,3 +113,7 @@ void Process::recalculatePriority(int generation) {
   priority = max;
 }
 
+
+bool sort_by_priority(Process* l, Process* r) {
+  return l->priority > r->priority;
+}

@@ -13,11 +13,11 @@ using std::cout;
 #define GREEN "\033[32m"
 
 void H(std::string str) {
-  cout << "## " << str << '\n';
+  //cout << "## " << str << '\n';
 }
 
 void P(std::string str) {
-  cout << str << '\n';
+  //cout << str << '\n';
 }
 
 void Test_AssigningPrioritiesWithSimpleCircuit() {
@@ -47,7 +47,7 @@ void Test_AssigningPrioritiesWithFeedback() {
 
 void Test_AssigningPrioritiesWithFeedback2() {
   H("Test: Assigns appropriate priorities to a 3-process feedback loop");
-  cout << "Creating mix units...\n";
+  //cout << "Creating mix units...\n";
   // With one process
   Mix mix1, mix2, mix3;
 
@@ -182,6 +182,38 @@ void Test_ExploringCircuits() {
   delete all;
 }
 
+void Test_SortingByPriority() {
+  Mix a,b,c,d,e;
+
+  connect(&a, &b);
+  connect(&b, &c);
+  connect(&c, &d);
+  connect(&d, &e);
+
+  e.isFinalProcess = true;
+  e.recalculatePriority(19);
+
+  auto allProcesses = explore(&a);
+
+  std::sort(
+      allProcesses->begin(), 
+      allProcesses->end(), 
+      sort_by_priority
+  );
+
+  for(auto p : *allProcesses)
+    cout << p->name() << '\n';
+  
+  assert((*allProcesses)[0] == &a);
+  assert((*allProcesses)[1] == &b);
+  assert((*allProcesses)[2] == &c);
+  assert((*allProcesses)[3] == &d);
+  assert((*allProcesses)[4] == &e);
+
+
+}
+
+
 int main() {
 
   try {
@@ -192,6 +224,7 @@ int main() {
     Test_ConnectFunction();
     Test_ProcessNeighbours();
     Test_ExploringCircuits();
+    Test_SortingByPriority();
 
   } catch(char const * msg) {
     std::cerr << RED << "Test failed: " << msg << std::endl;
