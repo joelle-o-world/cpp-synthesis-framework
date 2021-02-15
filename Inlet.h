@@ -12,7 +12,7 @@ class Inlet {
   public:
     float* buffer;
     Process* owner = NULL;
-    Outlet* connectedTo;
+    Outlet* connectedTo = NULL;
     bool isConnected = false;
     bool isFree();
     bool dontWriteInPlace = false;

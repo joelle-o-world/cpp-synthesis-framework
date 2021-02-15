@@ -36,6 +36,29 @@ void Test_AssigningPrioritiesWithSimpleCircuit() {
   assert(mix2.getPriority('c') == 0);
 }
 
+void Test_AssigningPrioritiesWithSimpleCircuit2() {
+  Mix a,b,c,d,e;
+
+  connect(&a, &c);
+  connect(&b, &c);
+  connect(&c, &d);
+  connect(&d, &e);
+
+  e.isFinalProcess = true;
+
+  a.recalculatePriority(19);
+  b.recalculatePriority(19);
+  c.recalculatePriority(19);
+  d.recalculatePriority(19);
+  e.recalculatePriority(19);
+  
+  assert(e.readPriority() == 0);
+  assert(d.readPriority() == 1);
+  assert(c.readPriority() == 2);
+  assert(b.readPriority() == 3);
+  assert(a.readPriority() == 3);
+}
+
 void Test_AssigningPrioritiesWithFeedback() {
   // With one process
   Mix mix1;
@@ -197,16 +220,34 @@ void Test_SortingByPriority() {
 
   sortProcesses(*allProcesses);
 
-  for(auto p : *allProcesses)
-    cout << p->name() << '\n';
-  
   assert((*allProcesses)[0] == &a);
   assert((*allProcesses)[1] == &b);
   assert((*allProcesses)[2] == &c);
   assert((*allProcesses)[3] == &d);
   assert((*allProcesses)[4] == &e);
+}
+
+void Test_BufferAssignment() {
+  Mix a,b,c,d,e;
+
+  connect(&a, &c);
+  connect(&b, &c);
+  connect(&c, &d);
+  connect(&d, &e);
+
+  e.isFinalProcess = true;
+  a.recalculatePriority(19);
+  b.recalculatePriority(19);
+  c.recalculatePriority(19);
+  d.recalculatePriority(19);
+  e.recalculatePriority(19);
 
 
+
+  std::vector<Process*> allProcesses = *explore(&a);
+  sortProcesses(allProcesses);
+  int numberOfBuffers = assignBuffers(allProcesses);
+  assert(numberOfBuffers == 2);
 }
 
 
@@ -215,12 +256,14 @@ int main() {
   try {
 
     Test_AssigningPrioritiesWithSimpleCircuit();
+    Test_AssigningPrioritiesWithSimpleCircuit2();
     Test_AssigningPrioritiesWithFeedback();
     Test_AssigningPrioritiesWithFeedback2();
     Test_ConnectFunction();
     Test_ProcessNeighbours();
     Test_ExploringCircuits();
     Test_SortingByPriority();
+    Test_BufferAssignment();
 
   } catch(char const * msg) {
     std::cerr << RED << "Test failed: " << msg << std::endl;

@@ -19,7 +19,7 @@ class Outlet;
 class Process {
   private:
     const int process_id;
-    int priority;
+    int priority = 0;
     int priority_generation;
     virtual inline std::string process_type() { return "process"; };
 
@@ -59,6 +59,7 @@ class Process {
 
     int getPriority(int generation = 0);
     void recalculatePriority(int generation = 0);
+    int readPriority() { return priority; }
 
     friend bool sort_by_priority(Process* r, Process* l);
 };

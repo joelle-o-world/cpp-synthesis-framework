@@ -19,7 +19,8 @@ std::vector<Process*>* explore(Process* startingPoint) {
   return all;
 }
 
-void assignBuffers(std::vector<Process*>& processes) {
+using std::cout;
+int assignBuffers(std::vector<Process*>& processes) {
   
   // Whats missing here is a way to identify the index of the buffer assigned
   // to a given inlet. Maybe use a std::map?
@@ -32,12 +33,21 @@ void assignBuffers(std::vector<Process*>& processes) {
 
   //for process, *P* in *PO* (in order)
   for(Process* P : processes) {
+    cout << P -> name() << ":\n";
+    cout << "\t(priority " << P -> readPriority() << ")\n";
+    
     //For each inlet *I* of *P*
     for(Inlet* I : P -> inlets) {
+      cout <<  '\t' << I -> name() << ":\n";
       //decrement I's buffer
       if(I->isConnected) {
+        // The bug coming from inside this block!
         int bufferIndex = outletBufferAssignments[I->connectedTo];
-        bufferLocks[bufferIndex]--;
+
+        cout << "\t" << I->name() << " -- decrementing buffer#" << bufferIndex << "\n";
+        --bufferLocks[bufferIndex];
+        if(bufferLocks[bufferIndex] < 0)
+          throw "Buffer lock was decremented too many times";
       }
 
       // (IMPLICIT) release the buffer if the reader count is 0
@@ -65,6 +75,7 @@ void assignBuffers(std::vector<Process*>& processes) {
 
         //increment *B*'s reader count
         ++bufferLocks[bufferIndex];
+        cout << "\tIncrementing buffer#" << bufferIndex << "\n";
       }
 
       //(IMPLICIT)
@@ -76,5 +87,9 @@ void assignBuffers(std::vector<Process*>& processes) {
     //For each _locked_ inlet *I* of *P*
       //decrement I's buffer
       //release the buffer if the reader count is 0
+      //
   }
+
+  std::cout << "Used " << buffers.size() << " buffers\n";
+  return buffers.size();
 }

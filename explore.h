@@ -9,4 +9,4 @@
 
 
 std::vector<Process*>* explore(Process* startingPoint);
-void assignBuffers(std::vector<Process*>& orderedProcesses);
+int assignBuffers(std::vector<Process*>& orderedProcesses);
