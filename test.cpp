@@ -228,12 +228,17 @@ void Test_SortingByPriority() {
 }
 
 void Test_BufferAssignment() {
+  cout << "Testing Buffer Assignment\n";
   Mix a,b,c,d,e;
 
-  connect(&a, &c);
-  connect(&b, &c);
-  connect(&c, &d);
-  connect(&d, &e);
+  cout << "Connecting " << a.name() << " -> " << c.name() << '\n';
+  connect(a.outlets[0], c.inlets[0]);
+  cout << "Connecting " << b.name() << " -> " << c.name() << '\n';
+  connect(b.outlets[0], c.inlets[1]);
+  cout << "Connecting " << c.name() << " -> " << d.name() << '\n';
+  connect(c.outlets[0], d.inlets[0]);
+  cout << "Connecting " << d.name() << " -> " << e.name() << '\n';
+  connect(d.outlets[0], e.inlets[0]);
 
   e.isFinalProcess = true;
   a.recalculatePriority(19);
@@ -250,7 +255,6 @@ void Test_BufferAssignment() {
   assert(numberOfBuffers == 2);
 }
 
-
 int main() {
 
   try {
@@ -263,6 +267,7 @@ int main() {
     Test_ProcessNeighbours();
     Test_ExploringCircuits();
     Test_SortingByPriority();
+    
     Test_BufferAssignment();
 
   } catch(char const * msg) {

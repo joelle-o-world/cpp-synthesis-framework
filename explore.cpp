@@ -22,14 +22,18 @@ std::vector<Process*>* explore(Process* startingPoint) {
 using std::cout;
 int assignBuffers(std::vector<Process*>& processes) {
   
-  // Whats missing here is a way to identify the index of the buffer assigned
-  // to a given inlet. Maybe use a std::map?
-
   using Buffer = float[CHUNK_SIZE];
 
   std::vector<float*> buffers; 
   std::vector<int> bufferLocks;
   std::map<Outlet*, int> outletBufferAssignments;
+  
+  // Initialise all inlets to -1
+  for(Process* P : processes) {
+    for(Outlet* O : P->outlets) {
+      outletBufferAssignments[O] = -1;
+    }
+  }
 
   //for process, *P* in *PO* (in order)
   for(Process* P : processes) {
@@ -43,6 +47,10 @@ int assignBuffers(std::vector<Process*>& processes) {
       if(I->isConnected) {
         // The bug coming from inside this block!
         int bufferIndex = outletBufferAssignments[I->connectedTo];
+
+        if(bufferIndex == -1) {
+          throw I->name() + " is connected to " + I->connectedTo->name() + " which has no assigned buffer";
+        }
 
         cout << "\t" << I->name() << " -- decrementing buffer#" << bufferIndex << "\n";
         --bufferLocks[bufferIndex];
@@ -68,6 +76,9 @@ int assignBuffers(std::vector<Process*>& processes) {
       // assign *O*'s write pointer to *B*
       O->buffer = buffers[bufferIndex];
 
+      // Add O to the buffer map
+      outletBufferAssignments[O] = bufferIndex;
+
       //for each inlet *J* connected to *O*
       for(Inlet* inlet : O->connectedTo) {
         // assign *J*'s read pointer to *B*
@@ -75,7 +86,7 @@ int assignBuffers(std::vector<Process*>& processes) {
 
         //increment *B*'s reader count
         ++bufferLocks[bufferIndex];
-        cout << "\tIncrementing buffer#" << bufferIndex << "\n";
+        cout << "\t" << O->name() << " -- Incrementing buffer#" << bufferIndex << "\n";
       }
 
       //(IMPLICIT)
