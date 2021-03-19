@@ -1,5 +1,9 @@
 #include "explore.h"
 
+/**
+ * Find all processes in a circuit by recursively following connections from a
+ * given starting point.
+ */
 std::vector<Process*>* explore(Process* startingPoint) {
   std::vector<Process*>* all = new std::vector<Process*>;
   all->push_back(startingPoint);
@@ -20,12 +24,28 @@ std::vector<Process*>* explore(Process* startingPoint) {
 }
 
 using std::cout;
+
+/**
+ * Assign buffers to the inlets and outlets in a circuit, in such a way as to
+ * maximise buffer sharing without conflicts.
+ *
+ * NOTE: Has bug in current implementation for handling circuits with feedback!
+ */
 int assignBuffers(std::vector<Process*>& processes) {
   
+  // Declare `Buffer` type
+  // NOTE: In future many types of buffers will be supported, not just fixed-
+  //       -length float arrays.
   using Buffer = float[CHUNK_SIZE];
 
+  // Vector of pointers to the buffers
   std::vector<float*> buffers; 
+
+  // Array of 'buffer locks': integers representing how many inlets are waiting
+  // to read from the buffer at the corresponding index
   std::vector<int> bufferLocks;
+
+  // Maps inlets to the index of the buffer they have been assigned in `buffers`.
   std::map<Outlet*, int> outletBufferAssignments;
   
   // Initialise all inlets to -1
@@ -35,12 +55,12 @@ int assignBuffers(std::vector<Process*>& processes) {
     }
   }
 
-  //for process, *P* in *PO* (in order)
+  // for each process, *P* in *PO* (in order)
   for(Process* P : processes) {
     cout << P -> name() << ":\n";
     cout << "\t(priority " << P -> readPriority() << ")\n";
     
-    //For each inlet *I* of *P*
+    // For each inlet *I* of *P*
     for(Inlet* I : P -> inlets) {
       cout <<  '\t' << I -> name() << ":\n";
       //decrement I's buffer
