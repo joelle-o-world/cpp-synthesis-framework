@@ -36,6 +36,11 @@ class AudioProcess {
     SignalBuffer** inputs;
     SignalBuffer** outputs;
 
+    ~AudioProcess() {
+      delete inputs;
+      delete outputs;
+    }
+
 
     /**
      * The function that transforms the audio data. Sub-classes override this.
