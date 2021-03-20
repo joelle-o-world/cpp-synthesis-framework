@@ -1,5 +1,10 @@
 #pragma once
 
+const int signalChunkSize = 256;
+const int sampleRate = 44100;
+const float sampleInterval = 1.0 / float(sampleRate);
+typedef float SignalBuffer[signalChunkSize];
+
 /**
  * Base class for audio processes.
  *
@@ -16,20 +21,20 @@
  *
  */
 class AudioProcess {
-  private:
+  public:
     /**
      * The addresses of the audio buffers the process reads from.
      */
-    float** inletbuffers;
+    SignalBuffer* inletbuffers;
 
     /**
      * The addresses of the audio buffers the process writes to.
      */
-    float** outletbuffers;
+    SignalBuffer* outletbuffers;
 
-  public:
     /**
      * The function that transforms the audio data. Sub-classes override this.
      */
-    virtual void process();
+    virtual void process() {
+    };
 };

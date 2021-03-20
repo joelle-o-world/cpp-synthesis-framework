@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 #include "./AudioProcess.h"
 
@@ -23,9 +24,13 @@ class AudioProcessCoordinator {
      */
     AudioProcess* process;
 
+  protected:
+    void addInlet(std::string name);
+    void addOutlet(std::string name);
+
   public:
-    std::vector<Inlet&> inlets;
-    std::vector<Outlet&> outlets;
+    std::vector<Inlet*> inlets;
+    std::vector<Outlet*> outlets;
 
 };
 
@@ -34,7 +39,7 @@ class Inlet {
     /**
      * The process coordinator which owns this inlet.
      */
-    AudioProcessCoordinator& owner;
+    AudioProcessCoordinator* owner;
 
     /**
      * Returns `true` if inlet has a connection.
