@@ -1,9 +1,10 @@
 #pragma once
 
-const int signalChunkSize = 256;
+const int signalChunkSize = 2048;
 const int sampleRate = 44100;
 const float sampleInterval = 1.0 / float(sampleRate);
 typedef float SignalBuffer[signalChunkSize];
+
 
 /**
  * Base class for audio processes.
@@ -32,6 +33,8 @@ class AudioProcess {
      */
     //SignalBuffer** outletbuffers;
 
+    SignalBuffer** inputs;
+    SignalBuffer** outputs;
 
 
     /**

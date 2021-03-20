@@ -10,21 +10,21 @@ int main() {
 
   _Osc osc1, osc2;
   osc1.frequency = 440;
-  osc2.frequency = 110;
+  osc2.frequency = 10;
 
-  osc1.out = &b1;
-  osc2.out = &b2;
+  osc1.outputs[0] = &b1;
+  osc2.outputs[0] = &b2;
 
 
   _Add adder;
-  adder.a = &b1;
-  adder.b = &b2;
-  adder.out = &b3;
+  adder.inputs[0] = &b1;
+  adder.inputs[1] = &b2;
+  adder.outputs[0] = &b3;
 
   _Multiply multiply;
   multiply.scaleFactor = .25;
-  multiply.a = &b3;
-  multiply.out = &b3;
+  multiply.inputs[0] = &b3;
+  multiply.outputs[0] = &b3;
 
   for(int i=0; true; ++i) {
     osc1.process();

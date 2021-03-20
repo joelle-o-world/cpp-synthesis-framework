@@ -5,17 +5,17 @@
 #include <iostream>
 
 class _Osc : public AudioProcess {
-  float * wavetable;
   float phase = 0;
 
   public:
-    SignalBuffer* out;
-    //_Osc() {
-      //inletbuffers = new SignalBuffer*[0];
-      //outletbuffers = new SignalBuffer*[1];
-    //}
+    _Osc() {
+      inputs = new SignalBuffer*[0];
+      outputs = new SignalBuffer*[1];
+    }
+
     float frequency = 440;
     void process() override {
+      SignalBuffer* out = outputs[0];
       for(int i=0; i < signalChunkSize; ++i) {
         phase += frequency * sampleInterval;
         while(phase > 1)
