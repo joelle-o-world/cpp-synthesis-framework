@@ -2,6 +2,9 @@
 
 #include "../AudioProcess.h"
 
+/**
+ * Multiplies a signal by a k-rate constant.
+ */
 class _Multiply : public AudioProcess {
   public:
     //SignalBuffer* a;
@@ -14,9 +17,9 @@ class _Multiply : public AudioProcess {
     }
 
     void process() override {
-      SignalBuffer* out = outputs[0];
-      SignalBuffer* a = inputs[0];
+      SignalBuffer& out = *outputs[0];
+      SignalBuffer& a = *inputs[0];
       for(int i=0; i < signalChunkSize; ++i)
-        (*out)[i] = (*a)[i] * scaleFactor;
+        out[i] = a[i] * scaleFactor;
     }
 };
