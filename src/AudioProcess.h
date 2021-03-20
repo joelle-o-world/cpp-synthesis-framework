@@ -25,16 +25,19 @@ class AudioProcess {
     /**
      * The addresses of the audio buffers the process reads from.
      */
-    SignalBuffer* inletbuffers;
+    //SignalBuffer** inletbuffers;
 
     /**
      * The addresses of the audio buffers the process writes to.
      */
-    SignalBuffer* outletbuffers;
+    //SignalBuffer** outletbuffers;
+
+
 
     /**
      * The function that transforms the audio data. Sub-classes override this.
      */
     virtual void process() {
+      // Base class does nothing
     };
 };
