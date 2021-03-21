@@ -37,6 +37,7 @@ class _Multiply : public AudioProcess {
           SignalBuffer& b = *inputs[1];
           for(int i=0; i < signalChunkSize; ++i)
             out[i] = a * b[i];
+
         } else
           // 2 k-rate operands. Weird edge case
           for( int i=0; i < signalChunkSize; ++i)
