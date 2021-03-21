@@ -23,7 +23,7 @@ class _Osc : public AudioProcess {
     void process() override {
       SignalBuffer& out = *outputs[0];
 
-      if(inputs[0] != NULL) {
+      if(inputs[0] != nullptr) {
         SignalBuffer& f = *inputs[0];
         // a-rate mode
         for(int i=0; i < signalChunkSize; ++i) {
