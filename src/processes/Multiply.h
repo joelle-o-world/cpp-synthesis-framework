@@ -16,11 +16,6 @@ class _Multiply : public AudioProcess {
       outputs = new SignalBuffer*[1];
     }
 
-    ~_Multiply() {
-      delete inputs;
-      delete outputs;
-    }
-
     void process() override {
       SignalBuffer& out = *outputs[0];
       SignalBuffer& a = *inputs[0];

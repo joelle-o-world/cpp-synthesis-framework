@@ -1,8 +1,16 @@
 #pragma once
 
-const int WAVETABLE_SIZE = 256;
+#include "./constants.h"
+#include <math.h>
 
-typedef float WaveTable[WAVETABLE_SIZE];
+const int WAVETABLE_SIZE = 44100;
 
-WaveTable sawtoothWaveTable;
+typedef float Wavetable[WAVETABLE_SIZE];
+
+extern Wavetable sawtoothWavetable;
+extern Wavetable sineWavetable;
+extern Wavetable squareWavetable;
+extern Wavetable triangleWavetable;
+
+void initialiseWavetables();
 

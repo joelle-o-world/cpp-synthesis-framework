@@ -4,4 +4,4 @@ FLAGS=-I ../include -I ../vendor/include -std=c++14 -stdlib=libc++ -fPIC -isyste
 
 
 runtest: 
-	${CC} src/main.cpp ${FLAGS} -o bin/test 
+	${CC} src/main.cpp src/wavetables.cpp ${FLAGS} -o bin/test 

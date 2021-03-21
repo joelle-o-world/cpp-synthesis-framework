@@ -26,14 +26,11 @@ class AudioProcess {
     /**
      * The addresses of the audio buffers the process reads from.
      */
-    //SignalBuffer** inletbuffers;
+    SignalBuffer** inputs;
 
     /**
      * The addresses of the audio buffers the process writes to.
      */
-    //SignalBuffer** outletbuffers;
-
-    SignalBuffer** inputs;
     SignalBuffer** outputs;
 
     ~AudioProcess() {
