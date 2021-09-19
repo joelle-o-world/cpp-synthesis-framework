@@ -3,35 +3,37 @@
 
 #define tabWidth 2
 
-char* endOfString(char* str) {
+const char* endOfString(const char* str) {
   while(*str)
     ++str;
   return str;
 }
 
-char *endOfLine(char *str) {
+const char *endOfLine(const char *str) {
   while (*str && str[0] != '\n')
     str++;
   return str;
 }
 
-char* newString(char* str) {
-}
-char *newString(char *str, int length) {
-  char *mem = malloc(length);
+//char* newString(char* str) {
+//}
+const char *newString(const char *str, int length) {
+  char *mem = (char*)malloc(length);
   memcpy(mem, str, length + 1);
   mem[length] = '\0';
   return mem;
 }
 
-char* newString(char* start, char* end) {
+const char* newString(const char* start, const char* end) {
   return newString(start, end-start);
 }
 
-char *copyLine(char *str) { return newString(str, endOfLine(str)); }
+const char *copyLine(const char *str) { 
+  return newString(str, endOfLine(str)); 
+}
 
-void forEachLine(char *str, void (*f)(char *line)) {
-  char *end;
+void forEachLine(const char *str, void (*f)(const char *line)) {
+  const char *end;
   do {
     end = endOfLine(str);
     f(newString(str, end));
@@ -39,13 +41,13 @@ void forEachLine(char *str, void (*f)(char *line)) {
   } while (*str);
 }
 
-bool isBlankLine(char *str) {
+bool isBlankLine(const char *str) {
   while (*str == ' ' || *str == '\t')
     ++str;
   return *str == '\n';
 }
 
-short int measureIndent(char *str) {
+short int measureIndent(const char *str) {
   short int indent = 0;
   while (*str) {
     char c = *str;
@@ -59,7 +61,7 @@ short int measureIndent(char *str) {
   return indent;
 }
 
-char *endOfIndentedSection(char *str) {
+const char *endOfIndentedSection(const char *str) {
   short int indent = measureIndent(str);
   do {
     str = endOfLine(str);
@@ -68,17 +70,17 @@ char *endOfIndentedSection(char *str) {
   return str;
 }
 
-char *copyIndentedSection(char *str) {
+const char *copyIndentedSection(const char *str) {
   return newString(str, endOfIndentedSection(str));
 }
 
 void forEachIndentedSection(
-  char *str, 
-  void (*f)(char *indentedSection, void* passAlong),
+  const char *str, 
+  void (*f)(const char *indentedSection, void* passAlong),
   void* passAlong
 ) {
   short int indent = measureIndent(str);
-  char *end;
+  const char *end;
   do {
     end = endOfIndentedSection(str);
     f(newString(str, end), passAlong);
@@ -87,11 +89,11 @@ void forEachIndentedSection(
 }
 
 void forEachIndentedSection(
-  char *str, 
-  void (*f)(char *indentedSection)
+  const char *str, 
+  void (*f)(const char *indentedSection)
 ) {
   short int indent = measureIndent(str);
-  char *end;
+  const char *end;
   do {
     end = endOfIndentedSection(str);
     f(newString(str, end));
@@ -99,24 +101,24 @@ void forEachIndentedSection(
   } while (*str && measureIndent(str) == indent);
 }
 
-char* endOfInlineWhitespace(char* str) {
+const char* endOfInlineWhitespace(const char* str) {
   while(*str == ' ' || *str == '\t')
     ++str;
   return str;
 }
 
-char* endOfWhitespace(char* str) {
+const char* endOfWhitespace(const char* str) {
   while(*str == ' ' || *str == '\t' || *str == '\n')
     ++str;
   return str;
 }
 
-char* startOfAttributeName(char* str) {
+const char* startOfAttributeName(const char* str) {
   return endOfInlineWhitespace(str);
 }
 
-char* endOfAttributeName(char* str) {
-  char* end = str;
+const char* endOfAttributeName(const char* str) {
+  const char* end = str;
   while(*end != ':')
     if(*end == '\n' || !*end)
       return nullptr;
@@ -125,21 +127,21 @@ char* endOfAttributeName(char* str) {
   return end;
 }
 
-char* copyAttributeName(char* str) {
-  char* start = startOfAttributeName(str);
-  char* end = endOfAttributeName(str);
+const char* copyAttributeName(const char* str) {
+  const char* start = startOfAttributeName(str);
+  const char* end = endOfAttributeName(str);
   return newString(start, end);
 }
 
-char* startOfAttributeValue(char* startOfLine) {
+const char* startOfAttributeValue(const char* startOfLine) {
   return endOfWhitespace(endOfAttributeName(startOfLine) + 1);
 }
 
-char* endOfAttributeValue(char* startOfLine) {
+const char* endOfAttributeValue(const char* startOfLine) {
   return endOfIndentedSection(startOfLine);
 }
 
-char* copyAttributeValue(char* startOfLine) {
+const char* copyAttributeValue(const char* startOfLine) {
   return newString(startOfAttributeValue(startOfLine), endOfAttributeValue(startOfLine));
 }
 
