@@ -8,3 +8,5 @@ To run,
 ```sh
 make && bin/test | play -r 44100 -b 32 -e float -c 1 -t raw -
 ```
+
+You may need to install SoX: `brew install sox`
