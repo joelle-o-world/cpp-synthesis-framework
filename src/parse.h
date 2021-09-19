@@ -57,6 +57,7 @@ short int measureIndent(const char *str) {
       indent += tabWidth;
     else
       break;
+    ++str;
   }
   return indent;
 }
