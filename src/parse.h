@@ -1,5 +1,5 @@
-
 #include <stdlib.h>
+#include <vector>
 
 #define tabWidth 2
 
@@ -10,9 +10,12 @@ const char* endOfString(const char* str) {
 }
 
 const char *endOfLine(const char *str) {
-  while (*str && str[0] != '\n')
+  if(*str == '\0')
+    return nullptr;
+  do {
     str++;
-  return str;
+  } while (*str && str[0] != '\n');
+  return str+1;
 }
 
 //char* newString(char* str) {
@@ -73,6 +76,24 @@ const char *endOfIndentedSection(const char *str) {
 
 const char *copyIndentedSection(const char *str) {
   return newString(str, endOfIndentedSection(str));
+}
+
+const char *copyIndentedBody(const char* str) {
+  return newString(endOfLine(str),  endOfIndentedSection(str));
+}
+
+std::vector<const char*> * listIndentedSubSections(const char* str) {
+  const char* end = endOfIndentedSection(str);
+  const char* next;
+  std::vector< const char*>* out = new std::vector<const char*>;
+  str = endOfLine(str);
+  while(str < end) {
+    next = endOfIndentedSection(str);
+    out->push_back(newString(str, next));
+    //out\>push (newString(str, next));
+    str = next;
+  }
+  return out;
 }
 
 void forEachIndentedSection(
@@ -145,5 +166,6 @@ const char* endOfAttributeValue(const char* startOfLine) {
 const char* copyAttributeValue(const char* startOfLine) {
   return newString(startOfAttributeValue(startOfLine), endOfAttributeValue(startOfLine));
 }
+
 
 // TODO: attributeValue

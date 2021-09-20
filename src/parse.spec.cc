@@ -11,6 +11,11 @@ int main() {
   std::cout << "\n\n";
 
   const char* exampleStr = "Hello,\n\tworld!";
+  const char* example2 = "*\n  osc\n  .5\nosc";
+  std::vector<const char*> example2SubSections = {
+    "  osc",
+    "  .5"
+  };
 
   // endOfString
   assert(
@@ -19,21 +24,43 @@ int main() {
 
   // endOfLine
   assert(
-    endOfLine(exampleStr) - exampleStr == 6
+    endOfLine(exampleStr) - exampleStr == 7
   );
 
   // TODO: newString
   // TODO: copyLine
   // TODO: forEachLine
-  // TODO: isBlankLine
+
+  // isBlankLine
+  assert(isBlankLine("\n"));
+  assert(!isBlankLine("hello!"));
 
   // measureIndent
   assert(measureIndent(exampleStr) == 0);
   assert(measureIndent("  hiii") == 2);
 
-  // TODO: endOfIndentedSection
-  // TODO: copyIndentedSection
-  // TODO: forEachIndentedSection
+  // endOfIndentedSection
+  assert(endOfIndentedSection(example2) - example2 == 13);
+
+  // copyIndentedSection
+  assert(
+    strcmp(copyIndentedSection(example2) , "*\n  osc\n  .5")
+  );
+
+  // copyIndentedBody
+  assert(
+    strcmp(copyIndentedBody(example2), "  osc\n  .5")
+  );
+
+  // listIndentedSubSections
+
+  std::cout << listIndentedSubSections(example2) << "\n\n";
+  assert(
+    *listIndentedSubSections(example2) == example2SubSections
+  );
+
+  
+
   // TODO: forEachIndentedSection
   // TODO: endOfInlineWhitespace
   // TODO: endOfWhitespace
