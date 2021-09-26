@@ -56,7 +56,11 @@ int main() {
 
   std::cout << listIndentedSubSections(example2) << "\n\n";
   assert(
-    *listIndentedSubSections(example2) == example2SubSections
+    std::equal(
+      example2SubSections.begin(),
+      example2SubSections.end(),
+      listIndentedSubSections(example2)->begin()
+    )
   );
 
   
