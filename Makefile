@@ -9,4 +9,4 @@ play:
 	${CC} src/main.cpp src/wavetables.cpp ${FLAGS} -o bin/play && bin/play | play -r 44100 -b 32 -e float -c 1 -t raw -
 
 tests:
-	${CC} src/parse.spec.cc ${FLAGS} -o bin/parse.test && bin/parse.test
+	${CC} src/parse/parse.spec.cc ${FLAGS} -o bin/parse.test && bin/parse.test
