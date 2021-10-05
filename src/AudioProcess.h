@@ -12,7 +12,8 @@ typedef float StereoConstant;
 typedef void* MIDIBuffer; // TODO: Future
 
 struct TypedSignalBuffer {
-  enum {StereoPCM, MonoPCM, Constant, Midi} type;
+  enum {Stereo32BitFloat, Mono32BitFloat, ConstantDouble, ConstantInt, MIDIData} type;
+
   union {
     StereoBuffer* stereoPCM;
     MonoBuffer* monoPCM;
