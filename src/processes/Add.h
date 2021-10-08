@@ -11,43 +11,44 @@ public:
   float a = 0;
   float b = 0;
 
-  _Add() {
+  _Add(): AudioProcess(2,1) {
     inputs = new SignalBuffer*[2];
     outputs = new SignalBuffer*[1];
   }
 
   void process() override {
+    if (inputs[0] != nullptr && inputs[1] != nullptr)
+      process(*inputs[0], *inputs[1], *outputs[0]);
+    else if (inputs[0] != nullptr)
+      process(*inputs[0], b, *outputs[0]);
+    else if (inputs[1] != nullptr)
+      process(*inputs[0], b, *outputs[0]);
+    else
+      process(a, b, *outputs[0]);
+  }
 
-    SignalBuffer& out = *outputs[0];
+  // Two a-rate signals
+  void process(SignalBuffer &a, SignalBuffer &b, SignalBuffer &out) {
+    for (int i = 0; i < signalChunkSize; ++i)
+      out[i] = a[i] + b[i];
+  }
 
-    if(inputs[0] != nullptr && inputs[1] != nullptr) {
+  // a is a-rate, b is k-rate
+  void process(SignalBuffer &a, float b, SignalBuffer &out) {
+    for (int i = 0; i < signalChunkSize; ++i)
+      out[i] = a[i] + b;
+  }
 
-      // Two a-rate signals
-      SignalBuffer& a = *inputs[0];
-      SignalBuffer& b = *inputs[1];
-      for(int i=0; i < signalChunkSize; ++i) 
-        out[i] = a[i] + b[i];
+  // a is k-rate, b is a-rate
+  void process(float a, SignalBuffer &b, SignalBuffer &out) {
+    for (int i = 0; i < signalChunkSize; ++i)
+      out[i] = a + b[i];
+  }
 
-    } else if(inputs[0] != nullptr) {
-
-      // a is a-rate, b is k-rate
-      SignalBuffer& a = *inputs[0];
-      for(int i=0; i < signalChunkSize; ++i)
-        out[i] = a[i] + b;
-
-    } else if(inputs[1] != nullptr) {
-
-      // a is k-rate, b is a-rate
-      SignalBuffer& b = *inputs[1];
-      for(int i=0; i < signalChunkSize; ++i)
-        out[i] = a + b[i];
-
-    } else {
-
-      // two k-rate signals. Weird edge case
-      float outval = a + b;
-      for(int i=0; i < signalChunkSize; ++i)
-        out[i] = outval;
-    }
+  // two k-rate signals
+  void process(float a, float b, SignalBuffer &out) {
+    float outval = a + b;
+    for (int i = 0; i < signalChunkSize; ++i)
+      out[i] = outval;
   }
 };
