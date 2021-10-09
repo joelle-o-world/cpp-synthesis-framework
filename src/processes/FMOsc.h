@@ -7,26 +7,17 @@
 
 class FMOsc : public AudioProcess {
   private:
-    _SemitoneToRatio str;
-    _Multiply mult;
-    _Osc carrier;
+    SemitoneToRatio semitonToRatio;
+    Multiply mult;
+    Osc carrier;
     SignalBuffer internalBuffer;
 
+  public:
     FMOsc(): AudioProcess(2,1) { }
 
     void process() {
-      str.inputs[0] = inputs[1];
-      str.outputs[0] = &internalBuffer;
-      str.process();
-
-      mult.inputs[0] = inputs[0];
-      mult.inputs[1] = &internalBuffer;
-      mult.outputs[0] = &internalBuffer;
-      mult.process();
-
-      carrier.inputs[0] = &internalBuffer;
-      carrier.outputs[0] = outputs[0];
-      carrier.process();
-
+      semitonToRatio.process(*inputs[1], internalBuffer);
+      mult.process(*inputs[0], internalBuffer, internalBuffer);
+      carrier.process(internalBuffer, *outputs[0]);
     }
 };
