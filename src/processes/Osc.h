@@ -15,7 +15,7 @@ class _Osc : public AudioProcess {
     float frequency = 440;
     Wavetable* waveform = &sineWavetable;
 
-    _Osc() {
+    _Osc(): AudioProcess(1,1) {
       inputs = new SignalBuffer*[1];
       outputs = new SignalBuffer*[1];
     }

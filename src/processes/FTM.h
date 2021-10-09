@@ -6,7 +6,7 @@
 
 class _FTM : public AudioProcess {
   public:
-    _FTM() {
+    _FTM():AudioProcess(1,1) {
       inputs = new SignalBuffer*[1];
       outputs = new SignalBuffer*[1];
     }
@@ -22,7 +22,7 @@ class _FTM : public AudioProcess {
 
 class _SemitoneToRatio : public AudioProcess {
   public:
-    _SemitoneToRatio() {
+    _SemitoneToRatio(): AudioProcess(1,1) {
       inputs = new SignalBuffer*[1];
       outputs = new SignalBuffer*[1];
     }

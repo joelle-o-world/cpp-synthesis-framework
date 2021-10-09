@@ -12,7 +12,7 @@ class _FMOsc : public AudioProcess {
     _Osc carrier;
     SignalBuffer internalBuffer;
 
-    _FMOsc() {
+    _FMOsc(): AudioProcess(2,1) {
       inputs = new SignalBuffer*[2];
       outputs = new SignalBuffer*[1];
     }

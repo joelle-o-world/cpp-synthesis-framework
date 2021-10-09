@@ -10,7 +10,7 @@ class _Multiply : public AudioProcess {
     float a = 1.0;
     float b = 1.0;
 
-    _Multiply() {
+    _Multiply(): AudioProcess(2,1) {
       inputs = new SignalBuffer*[2];
       outputs = new SignalBuffer*[1];
     }
