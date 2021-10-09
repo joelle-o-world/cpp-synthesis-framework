@@ -65,7 +65,10 @@ class AudioProcess {
     SignalBuffer** outputs;
 
     AudioProcess(unsigned char numberInputs, unsigned char numberOfOutputs)
-        : numberOfOutputs(numberOfOutputs), numberOfInputs(numberInputs) {}
+        : numberOfInputs(numberInputs),numberOfOutputs(numberOfOutputs)  {
+      inputs = new SignalBuffer*[numberOfInputs];
+      outputs = new SignalBuffer*[numberOfOutputs];
+    }
 
     ~AudioProcess() {
       delete inputs;

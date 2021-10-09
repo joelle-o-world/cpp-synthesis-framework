@@ -11,10 +11,7 @@ public:
   float a = 0;
   float b = 0;
 
-  _Add(): AudioProcess(2,1) {
-    inputs = new SignalBuffer*[2];
-    outputs = new SignalBuffer*[1];
-  }
+  _Add(): AudioProcess(2,1) { }
 
   void process() override {
     if (inputs[0] != nullptr && inputs[1] != nullptr)

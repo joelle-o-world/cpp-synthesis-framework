@@ -10,10 +10,7 @@ public:
   float a = 1.0;
   float b = 1.0;
 
-  _Multiply() : AudioProcess(2, 1) {
-    inputs = new SignalBuffer *[2];
-    outputs = new SignalBuffer *[1];
-  }
+  _Multiply() : AudioProcess(2, 1) { }
 
   void process() override {
     SignalBuffer &out = *outputs[0];

@@ -6,10 +6,7 @@
 
 class _FTM : public AudioProcess {
   public:
-    _FTM():AudioProcess(1,1) {
-      inputs = new SignalBuffer*[1];
-      outputs = new SignalBuffer*[1];
-    }
+    _FTM():AudioProcess(1,1) { }
 
     void process() override {
       SignalBuffer& in = *inputs[0];
