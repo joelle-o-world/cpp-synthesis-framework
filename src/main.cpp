@@ -1,16 +1,19 @@
-#include <iostream> 
+#include <iostream>
 
-#include "./processes/Osc.h"
 #include "./processes/Add.h"
-#include "./processes/Multiply.h"
 #include "./processes/FTM.h"
+#include "./processes/Multiply.h"
+#include "./processes/Osc.h"
 #include "./wavetables.h"
 
 using std::cout;
 int main() {
   initialiseWavetables();
 
-  SignalBuffer b1, b2,b3;
+  StereoBuffer sb1, sb2, sb3, sb4;
+  float sixtynine = 69.0;
+  TypedSignalBuffer b1 = {Stereo, &sb1};
+  TypedSignalBuffer b2 = {.type = Constant, .constant = &sixtynine};
 
   Osc carrier, modulator;
 
@@ -23,7 +26,7 @@ int main() {
   modulationIntensity.inputs[1] = &b1;
   modulationIntensity.outputs[0] = &b1;
 
-  sum.a = 69;
+  sum.inputs[0] = &b2;
   sum.inputs[1] = &b1;
   sum.outputs[0] = &b1;
 
@@ -34,10 +37,9 @@ int main() {
   carrier.inputs[0] = &b1;
   carrier.outputs[0] = &b1;
 
-  modulator.frequency = 20;
+  modulator.inputs[0]->constant = new float(20);
 
-
-  for(int i=0; true; ++i) {
+  for (int i = 0; true; ++i) {
     modulator.process();
     modulationIntensity.process();
     sum.process();
@@ -46,6 +48,6 @@ int main() {
     modulationIntensity.a = modulationIntensity.a * .99;
 
     modulator.frequency += .1;
-    fwrite(b1, sizeof(float), signalChunkSize, stdout);
+    fwrite(b1.stereo, sizeof(float), signalChunkSize, stdout);
   }
 }

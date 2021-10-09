@@ -8,6 +8,7 @@
  */
 class Osc : public AudioProcess {
   float phase = 0;
+  float rightPhase = 0;
 
 public:
   float frequency = 440;
@@ -16,17 +17,18 @@ public:
   Osc() : AudioProcess(1, 1) {}
 
   void process() override {
-    SignalBuffer &out = *outputs[0];
-
     if (inputs[0] != nullptr) 
-      process(*inputs[0], *outputs[0]);
+      process(*inputs[0]->stereo, *outputs[0]->stereo);
     else
       // k-rate mode
-      process(frequency, *outputs[0]);
+      process(frequency, *outputs[0]->stereo);
   }
 
-  // a-rate mode
-  void process(SignalBuffer &frequency, SignalBuffer &out) {
+
+
+
+  // a-rate monophonic mode
+  void process(MonoBuffer &frequency, MonoBuffer &out) {
     for (int i = 0; i < signalChunkSize; ++i) {
       phase += frequency[i] * sampleInterval;
       while (phase > 1)
@@ -39,8 +41,50 @@ public:
     }
   }
 
-  // k-rate mode
-  void process(float frequency, SignalBuffer &out) {
+  // a-rate mono-to-stereo mode
+  void process(MonoBuffer &frequency, StereoBuffer &out) {
+    for (int i = 0; i < signalChunkSize*2; i+=2) {
+      phase += frequency[i] * sampleInterval;
+      while (phase > 1)
+        --phase;
+      while (phase < 0)
+        ++phase;
+
+      int j = phase * WAVETABLE_SIZE;
+      out[i] = (*waveform)[j];
+      out[i + 1] = out[i];
+    }
+  }
+
+  // a-rate stereo mode
+  void process(StereoBuffer &frequency, StereoBuffer &out) {
+    for (int i = 0; i < signalChunkSize*2; i+=2) {
+      phase += frequency[i] * sampleInterval;
+      while (phase > 1)
+        --phase;
+      while (phase < 0)
+        ++phase;
+
+      int j = phase * WAVETABLE_SIZE;
+      out[i] = (*waveform)[j];
+      out[i + 1] = out[i];
+    }    
+    for (int i = 1; i < signalChunkSize*2; i+=2) {
+      rightPhase += frequency[i] * sampleInterval;
+      while (rightPhase > 1)
+        --rightPhase;
+      while (rightPhase < 0)
+        ++rightPhase;
+
+      int j = rightPhase * WAVETABLE_SIZE;
+      out[i + 1] = out[i];
+    }
+
+
+  }
+
+  // k-rate mono mode
+  void process(float frequency, MonoBuffer &out) {
     for (int i = 0; i < signalChunkSize; ++i) {
       phase += frequency * sampleInterval;
       while (phase > 1)
@@ -51,4 +95,18 @@ public:
       out[i] = (*waveform)[j];
     }
   }
+
+  void process(float frequency, StereoBuffer &out) {
+    for (int i = 0; i < signalChunkSize*2; i+=2) {
+      phase += frequency * sampleInterval;
+      while (phase > 1)
+        --phase;
+      while (phase < 0)
+        ++phase;
+      int j = phase * WAVETABLE_SIZE;
+      out[i] = (*waveform)[j];
+      out[i+1] = out[i];
+    }
+  }
+
 };

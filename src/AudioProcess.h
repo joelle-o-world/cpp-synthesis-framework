@@ -14,10 +14,9 @@ typedef float StereoConstant;
 typedef void* MIDIBuffer; // TODO: Future
 
 enum SignalType : unsigned char {
-  Stereo32BitFloat = 1,
-  Mono32BitFloat,
-  ConstantDouble,
-  ConstantInt,
+  Stereo = 1,
+  Mono,
+  Constant,
   MIDIData
 };
 
@@ -25,11 +24,11 @@ struct TypedSignalBuffer {
   SignalType type;
 
   union {
-    StereoBuffer* stereoPCM;
-    MonoBuffer* monoPCM;
+    StereoBuffer* stereo;
+    MonoBuffer* mono;
     float* constant;
     MIDIBuffer* midi;
-  };
+  } ;
 };
 
 typedef unsigned char *IOSignature;
@@ -55,19 +54,19 @@ class AudioProcess {
     /**
      * The addresses of the audio buffers the process reads from.
      */
-    SignalBuffer** inputs;
+    TypedSignalBuffer** inputs;
 
 
     const unsigned char numberOfOutputs;
     /**
      * The addresses of the audio buffers the process writes to.
      */
-    SignalBuffer** outputs;
+    TypedSignalBuffer** outputs;
 
     AudioProcess(unsigned char numberInputs, unsigned char numberOfOutputs)
         : numberOfInputs(numberInputs),numberOfOutputs(numberOfOutputs)  {
-      inputs = new SignalBuffer*[numberOfInputs];
-      outputs = new SignalBuffer*[numberOfOutputs];
+      inputs = new TypedSignalBuffer*[numberOfInputs];
+      outputs = new TypedSignalBuffer*[numberOfOutputs];
     }
 
     ~AudioProcess() {
