@@ -12,11 +12,11 @@ int main() {
 
   SignalBuffer b1, b2,b3;
 
-  _Osc carrier, modulator;
+  Osc carrier, modulator;
 
-  _Multiply modulationIntensity;
+  Multiply modulationIntensity;
 
-  _Add sum;
+  Add sum;
 
   modulator.outputs[0] = &b1;
   modulationIntensity.a = 100;
@@ -27,7 +27,7 @@ int main() {
   sum.inputs[1] = &b1;
   sum.outputs[0] = &b1;
 
-  _FTM ftm;
+  FTM ftm;
   ftm.inputs[0] = &b1;
   ftm.outputs[0] = &b1;
 

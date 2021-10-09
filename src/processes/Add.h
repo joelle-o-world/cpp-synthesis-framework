@@ -6,12 +6,12 @@
 /**
  * Adds two audio buffers together.
  */
-class _Add : public AudioProcess {
+class Add : public AudioProcess {
 public:
   float a = 0;
   float b = 0;
 
-  _Add(): AudioProcess(2,1) { }
+  Add(): AudioProcess(2,1) { }
 
   void process() override {
     if (inputs[0] != nullptr && inputs[1] != nullptr)

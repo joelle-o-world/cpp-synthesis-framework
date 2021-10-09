@@ -4,9 +4,9 @@
 
 #include "../AudioProcess.h"
 
-class _FTM : public AudioProcess {
+class FTM : public AudioProcess {
   public:
-    _FTM():AudioProcess(1,1) { }
+    FTM():AudioProcess(1,1) { }
 
     void process() override {
       SignalBuffer& in = *inputs[0];
@@ -17,9 +17,9 @@ class _FTM : public AudioProcess {
     }
 };
 
-class _SemitoneToRatio : public AudioProcess {
+class SemitoneToRatio : public AudioProcess {
   public:
-    _SemitoneToRatio(): AudioProcess(1,1) {
+    SemitoneToRatio(): AudioProcess(1,1) {
       inputs = new SignalBuffer*[1];
       outputs = new SignalBuffer*[1];
     }

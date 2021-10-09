@@ -6,14 +6,14 @@
 /**
  * Simple k/a-rate frequency wavetable oscillator.
  */
-class _Osc : public AudioProcess {
+class Osc : public AudioProcess {
   float phase = 0;
 
 public:
   float frequency = 440;
   Wavetable *waveform = &sineWavetable;
 
-  _Osc() : AudioProcess(1, 1) {}
+  Osc() : AudioProcess(1, 1) {}
 
   void process() override {
     SignalBuffer &out = *outputs[0];

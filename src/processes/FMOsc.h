@@ -5,14 +5,14 @@
 #include "./FTM.h"
 #include "./Multiply.h"
 
-class _FMOsc : public AudioProcess {
+class FMOsc : public AudioProcess {
   private:
     _SemitoneToRatio str;
     _Multiply mult;
     _Osc carrier;
     SignalBuffer internalBuffer;
 
-    _FMOsc(): AudioProcess(2,1) { }
+    FMOsc(): AudioProcess(2,1) { }
 
     void process() {
       str.inputs[0] = inputs[1];
