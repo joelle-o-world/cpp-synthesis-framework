@@ -22,7 +22,7 @@ public:
     else if (inputs[0] != nullptr)
       process(*inputs[0], b, *outputs[0]);
     else if (inputs[1] != nullptr)
-      process(*inputs[0], b, *outputs[0]);
+      process(a, *inputs[1], *outputs[0]);
     else
       process(a, b, *outputs[0]);
   }
