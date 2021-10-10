@@ -17,11 +17,25 @@ public:
   Osc() : AudioProcess(1, 1) {}
 
   void process() override {
-    if (inputs[0] != nullptr) 
-      process(*inputs[0]->stereo, *outputs[0]->stereo);
+    TypedSignalBuffer& frequency = *inputs[0];
+    TypedSignalBuffer& out = *outputs[0];
+    if(frequency.type == Mono && out.type == Mono)
+      process(*frequency.mono, *out.mono);
+
+    else if(frequency.type == Mono && out.type == Stereo)
+      process(*frequency.mono, *out.stereo);
+
+    else if(frequency.type == Stereo && out.type == Stereo)
+      process(*frequency.stereo, *out.stereo);
+
+    else if(frequency.type == Constant && out.type == Mono)
+      process(*frequency.constant, *out.mono);
+
+    else if(frequency.type == Constant && out.type == Stereo)
+      process(*frequency.constant, *out.stereo);
+
     else
-      // k-rate mode
-      process(frequency, *outputs[0]->stereo);
+      throw "Unexpected io";
   }
 
 

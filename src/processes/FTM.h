@@ -9,8 +9,9 @@ public:
   FTM() : AudioProcess(1, 1) {}
 
   void process() override {
-    if (inputs[0]->type == Stereo && outputs[0]->type == Stereo)
-      process(*inputs[0]->stereo, *outputs[0]->stereo);
+    TypedSignalBuffer& a = *inputs[0], out = *outputs[0];
+    if (a.type == Stereo && out.type == Stereo)
+      process(*a.stereo, *out.stereo);
     else
       throw "Unexpected signal types";
   }
@@ -26,8 +27,9 @@ public:
   SemitoneToRatio() : AudioProcess(1, 1) {}
 
   void process() override {
-    if (inputs[0]->type == Stereo && outputs[0]->type == Stereo)
-      process(*inputs[0]->stereo, *outputs[0]->stereo);
+    TypedSignalBuffer& a = *inputs[0], out = *outputs[0];
+    if (a.type == Stereo && out.type == Stereo)
+      process(*a.stereo, *out.stereo);
     else
       throw "Unexpected signal types";
   }

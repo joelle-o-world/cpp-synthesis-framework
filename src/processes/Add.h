@@ -14,15 +14,21 @@ public:
   Add(): AudioProcess(2,1) { }
 
   void process() override {
-    if (outputs[0]->type == Stereo) {
-      if (inputs[0]->type == Stereo && inputs[1]->type == Stereo)
-        process(*inputs[0]->stereo, *inputs[1]->stereo, *outputs[0]->stereo);
-      else if (inputs[0]->type == Stereo && inputs[1]->type == Constant)
-        process(*inputs[0]->stereo, *inputs[1]->constant, *outputs[0]->stereo);
-      else if (inputs[0]->type == Constant && inputs[1]->type == Stereo)
-        process(*inputs[0]->constant, *inputs[1]->stereo, *outputs[0]->stereo);
-      else if (inputs[0]->type == Constant && inputs[1]->type == Constant)
-        process(*inputs[0]->constant, *inputs[1]->stereo, *outputs[0]->stereo);
+    TypedSignalBuffer &a = *inputs[0], &b = *inputs[1], &out = *outputs[0];
+    
+    if (out.type == Stereo) {
+      if (a.type == Stereo && b.type == Stereo)
+        process(*a.stereo, *b.stereo, *out.stereo);
+
+      else if (a.type == Stereo && b.type == Constant)
+        process(*a.stereo, *b.constant, *out.stereo);
+
+      else if (a.type == Constant && b.type == Stereo)
+        process(*a.constant, *b.stereo, *out.stereo);
+
+      else if (a.type == Constant && b.type == Constant)
+        process(*a.constant, *b.constant, *out.stereo);
+
       else
         throw "unexpected input signal types";
     } else
