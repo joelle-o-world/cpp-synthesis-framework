@@ -13,6 +13,11 @@ typedef float MonoConstant;
 typedef float StereoConstant;
 typedef void* MIDIBuffer; // TODO: Future
 
+inline void stereoify(MonoBuffer& a, StereoBuffer& b) {
+  for(int i=signalChunkSize-1; i >= 0; --i) 
+    b[i*2] = b[i*2+1] = a[i];
+};
+
 enum SignalType : unsigned char {
   Stereo = 1,
   Mono,
