@@ -15,6 +15,7 @@ class Decay : public AudioProcess {
   float level;
   float rightLevel;
 
+  public:
   Decay() : AudioProcess(1, 1) {}
 
   void retrigger() {
