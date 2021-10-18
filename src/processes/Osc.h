@@ -14,6 +14,15 @@ public:
   float frequency = 440;
   Wavetable *waveform = &sineWavetable;
 
+  void setPhase(float l) {
+    phase = rightPhase = l;
+  }
+
+  void setPhase(float l, float r) {
+    phase = l;
+    rightPhase = r;
+  }
+
   Osc() : AudioProcess(1, 1) {}
 
   void process() override {

@@ -6,6 +6,7 @@
 #include "./processes/Osc.h"
 #include "./processes/Decay.h"
 #include "./wavetables.h"
+#include "./processes/GlitchyLoop.h"
 
 using std::cout;
 int main() {
@@ -19,18 +20,26 @@ int main() {
   TypedSignalBuffer c1 = {.type = Constant, .constant = &sixtynine};
   TypedSignalBuffer c2 = {.type=Constant, .constant = &hl};
 
-  Osc osc;
-  osc.inputs[0] = &c1;
-  osc.outputs[0] = &b1;
 
-  Decay decay1;
-  decay1.inputs[0] = &c2;
-  decay1.outputs[0] = &b2;
+  Decay decay2;
+
+  GlitchyLoop gl;
+  gl.inputs[0] = &c1;
+  gl.outputs[0] = &b1;
+
+  //Osc osc;
+  //osc.inputs[0] = &c1;
+  //osc.outputs[0] = &b1;
 
   Multiply mult;
   mult.inputs[0] = &b1;
   mult.inputs[1] = &b2;
   mult.outputs[0] = &b1;
+
+  Decay decay1;
+  decay1.inputs[0] = &c2;
+  decay1.outputs[0] = &b2;
+
 
   decay1.retrigger();
 
@@ -38,7 +47,8 @@ int main() {
 
   for (int i = 0; true; ++i) {
     
-    osc.process();
+    //osc.process();
+    gl.process();
     decay1.process();
     //cout << *b2.stereo;
     
