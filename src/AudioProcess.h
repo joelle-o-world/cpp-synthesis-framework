@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <math.h>
 
 const int signalChunkSize = 2048;
 const int sampleRate = 44100;
