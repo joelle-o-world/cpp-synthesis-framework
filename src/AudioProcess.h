@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <math.h>
 
 const int signalChunkSize = 2048;
 const int sampleRate = 44100;
@@ -86,6 +87,28 @@ class AudioProcess {
     virtual void process() {
       // Base class does nothing
     };
+};
+
+class UnaryOperationProcess : public AudioProcess {
+public:
+  UnaryOperationProcess() : AudioProcess(1, 1) {}
+
+  void process() override {
+    TypedSignalBuffer &in = *inputs[0], out = *outputs[0];
+    if (in.type == Stereo && out.type == Stereo)
+      process(*in.stereo, *out.stereo);
+    else
+      throw "Unexpected signal types";
+  }
+
+  virtual inline void processSample(float &in, float &out) {
+    // Base class does nothing
+  }
+
+  void process(StereoBuffer &in, StereoBuffer &out) {
+    for (int i = 0; i < signalChunkSize * 2; ++i)
+      processSample(out[i], in[i]);
+  }
 };
 
 class BinaryOperationProcess : public AudioProcess {

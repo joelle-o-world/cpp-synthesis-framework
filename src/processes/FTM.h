@@ -4,38 +4,12 @@
 
 #include "../AudioProcess.h"
 
-class FTM : public AudioProcess {
-public:
-  FTM() : AudioProcess(1, 1) {}
-
-  void process() override {
-    TypedSignalBuffer& a = *inputs[0], out = *outputs[0];
-    if (a.type == Stereo && out.type == Stereo)
-      process(*a.stereo, *out.stereo);
-    else
-      throw "Unexpected signal types";
-  }
-
-  void process(StereoBuffer &in, StereoBuffer &out) {
-    for (int i = 0; i < signalChunkSize * 2; ++i)
-      out[i] = 440.0 * pow(2.0, (in[i] - 69.0) / 12.0);
+class FTM : public UnaryOperationProcess {
+  void processSample(float &in, float &out) override {
+    out = 440.0 * pow(2.0, (in - 69.0) / 12.0);
   }
 };
 
-class SemitoneToRatio : public AudioProcess {
-public:
-  SemitoneToRatio() : AudioProcess(1, 1) {}
-
-  void process() override {
-    TypedSignalBuffer& a = *inputs[0], out = *outputs[0];
-    if (a.type == Stereo && out.type == Stereo)
-      process(*a.stereo, *out.stereo);
-    else
-      throw "Unexpected signal types";
-  }
-
-  void process(StereoBuffer &in, StereoBuffer &out) {
-    for (int i = 0; i < signalChunkSize * 2; ++i)
-      out[i] = pow(2.0, in[i] / 12.0);
-  }
+class SemitoneToRatio : public UnaryOperationProcess {
+  void processSample(float &in, float &out) { out = pow(2.0, in / 12.0); }
 };
