@@ -79,18 +79,6 @@ class AudioProcess {
       delete outputs;
     }
 
-    //IOSignature ioSignature() {
-      //unsigned char* signature = (unsigned char*) malloc(numberOfInputs + numberOfOutputs + 1);
-
-      //for(int i=0; i < numberOfInputs; ++i)
-        //signature[i] = inputs[i]->type;
-      //for(int i=0; i < numberOfOutputs; ++i)
-        //signature[i + numberOfInputs] = outputs[i] -> type;
-      //signature[numberOfInputs + numberOfOutputs] = 0;
-
-      //return signature;
-    //}
-
 
     /**
      * The function that transforms the audio data. Sub-classes override this.
@@ -98,4 +86,65 @@ class AudioProcess {
     virtual void process() {
       // Base class does nothing
     };
+};
+
+class BinaryOperationProcess : public AudioProcess {
+
+private:
+  virtual inline void processSample(float &a, float &b, float &out) {
+    // Base class does nothing
+  }
+
+public:
+  BinaryOperationProcess() : AudioProcess(2, 1) {}
+
+  void process() override {
+
+    TypedSignalBuffer &a = *inputs[0];
+    TypedSignalBuffer &b = *inputs[1];
+    TypedSignalBuffer &out = *outputs[0];
+
+    if (out.type == Stereo) {
+      if (a.type == Stereo && b.type == Stereo)
+        process(*a.stereo, *b.stereo, *out.stereo);
+
+      else if (a.type == Stereo && b.type == Constant)
+        process(*a.stereo, *b.constant, *out.stereo);
+
+      else if (a.type == Constant && b.type == Stereo)
+        process(*a.constant, *b.stereo, *out.stereo);
+
+      else if (a.type == Constant && b.type == Constant)
+        process(*a.constant, *b.constant, *out.stereo);
+
+      else
+        throw "unexpected input signal types";
+
+    } else
+      throw "output must be stereo";
+  }
+
+  // Two a-rate signals
+  void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) {
+    for (int i = 0; i < signalChunkSize * 2; ++i)
+      processSample(a[i], b[i], out[i]);
+  }
+
+  // a is a-rate, b is k-rate
+  void process(StereoBuffer &a, float &b, StereoBuffer &out) {
+    for (int i = 0; i < signalChunkSize * 2; ++i)
+      processSample(a[i] , b, out[i]);
+  }
+
+  // a is k-rate, b is a-rate
+  void process(float &a, StereoBuffer &b, StereoBuffer &out) {
+    for (int i = 0; i < signalChunkSize * 2; ++i)
+      processSample(a , b[i], out[i] );
+  }
+
+  // two k-rate signals
+  void process(float &a, float &b, StereoBuffer &out) {
+    for (int i = 0; i < signalChunkSize * 2; ++i)
+      processSample(a, b, out[i]);
+  }
 };
