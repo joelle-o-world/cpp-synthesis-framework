@@ -1,8 +1,7 @@
 #include <iostream>
 
-#include "./processes/Add.h"
+#include "./processes/arithmetic.h"
 #include "./processes/FTM.h"
-#include "./processes/Multiply.h"
 #include "./processes/Osc.h"
 #include "./processes/Decay.h"
 #include "./wavetables.h"

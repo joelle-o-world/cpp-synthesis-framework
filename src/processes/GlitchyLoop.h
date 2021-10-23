@@ -3,7 +3,7 @@
 #include "../AudioProcess.h"
 #include "../wavetables.h"
 #include "./Osc.h"
-#include "./Multiply.h"
+#include "./arithmetic.h"
 
 
 class GlitchyLoop: public AudioProcess {
