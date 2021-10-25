@@ -11,29 +11,24 @@ typedef float StereoBuffer[signalChunkSize * 2];
 typedef float MonoBuffer[signalChunkSize];
 typedef float MonoConstant;
 typedef float StereoConstant;
-typedef void* MIDIBuffer; // TODO: Future
+typedef void *MIDIBuffer; // TODO: Future
 
-inline void stereoify(MonoBuffer& a, StereoBuffer& b) {
-  for(int i=signalChunkSize-1; i >= 0; --i) 
-    b[i*2] = b[i*2+1] = a[i];
+inline void stereoify(MonoBuffer &a, StereoBuffer &b) {
+  for (int i = signalChunkSize - 1; i >= 0; --i)
+    b[i * 2] = b[i * 2 + 1] = a[i];
 };
 
-enum SignalType : unsigned char {
-  Stereo = 1,
-  Mono,
-  Constant,
-  MIDIData
-};
+enum SignalType : unsigned char { Stereo = 1, Mono, Constant, MIDIData };
 
 struct TypedSignalBuffer {
   SignalType type;
 
   union {
-    StereoBuffer* stereo;
-    MonoBuffer* mono;
-    float* constant;
-    MIDIBuffer* midi;
-  } ;
+    StereoBuffer *stereo;
+    MonoBuffer *mono;
+    float *constant;
+    MIDIBuffer *midi;
+  };
 };
 
 typedef unsigned char *IOSignature;
@@ -49,48 +44,46 @@ typedef unsigned char *IOSignature;
  *
  * AudioProcess sub-classes should be extremely minimal and do not contain some
  * pieces of information that may be surprising. Number of inlets, outlets and
- * the size and format of their buffers is the domain of the AudioProcessCoordinator
- * subclasses.
+ * the size and format of their buffers is the domain of the
+ * AudioProcessCoordinator subclasses.
  */
 class AudioProcess {
-  public:
-    const unsigned char numberOfInputs;
+public:
+  const unsigned char numberOfInputs;
 
-    /**
-     * The addresses of the audio buffers the process reads from.
-     */
-    TypedSignalBuffer** inputs;
+  /**
+   * The addresses of the audio buffers the process reads from.
+   */
+  TypedSignalBuffer **inputs;
 
+  const unsigned char numberOfOutputs;
+  /**
+   * The addresses of the audio buffers the process writes to.
+   */
+  TypedSignalBuffer **outputs;
 
-    const unsigned char numberOfOutputs;
-    /**
-     * The addresses of the audio buffers the process writes to.
-     */
-    TypedSignalBuffer** outputs;
+  AudioProcess(unsigned char numberInputs, unsigned char numberOfOutputs)
+      : numberOfInputs(numberInputs), numberOfOutputs(numberOfOutputs) {
+    inputs = new TypedSignalBuffer *[numberOfInputs];
+    outputs = new TypedSignalBuffer *[numberOfOutputs];
+  }
 
-    AudioProcess(unsigned char numberInputs, unsigned char numberOfOutputs)
-        : numberOfInputs(numberInputs),numberOfOutputs(numberOfOutputs)  {
-      inputs = new TypedSignalBuffer*[numberOfInputs];
-      outputs = new TypedSignalBuffer*[numberOfOutputs];
-    }
+  ~AudioProcess() {
+    delete inputs;
+    delete outputs;
+  }
 
-    ~AudioProcess() {
-      delete inputs;
-      delete outputs;
-    }
-
-
-    /**
-     * The function that transforms the audio data. Sub-classes override this.
-     */
-    virtual void process() {
+  /**
+   * The function that transforms the audio data. Sub-classes override this.
+   */
+  virtual void process(){
       // Base class does nothing
-    };
+  };
 };
 
-class UnaryOperationProcess : public AudioProcess {
+class UnaryProcess : public AudioProcess {
 public:
-  UnaryOperationProcess() : AudioProcess(1, 1) {}
+  UnaryProcess() : AudioProcess(1, 1) {}
 
   void process() override {
     TypedSignalBuffer &in = *inputs[0], out = *outputs[0];
@@ -100,8 +93,15 @@ public:
       throw "Unexpected signal types";
   }
 
+  virtual void process(StereoBuffer &in, StereoBuffer &out) {
+    throw "No override defined";
+  }
+};
+
+class UnaryOperationProcess : public UnaryProcess {
+public:
   virtual inline void processSample(float &in, float &out) {
-    // Base class does nothing
+    throw "No override defined";
   }
 
   void process(StereoBuffer &in, StereoBuffer &out) {
@@ -110,15 +110,9 @@ public:
   }
 };
 
-class BinaryOperationProcess : public AudioProcess {
-
-private:
-  virtual inline void processSample(float &a, float &b, float &out) {
-    // Base class does nothing
-  }
-
+class BinaryProcess : public AudioProcess {
 public:
-  BinaryOperationProcess() : AudioProcess(2, 1) {}
+  BinaryProcess() : AudioProcess(2, 1) {}
 
   void process() override {
 
@@ -147,25 +141,53 @@ public:
   }
 
   // Two a-rate signals
-  void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) {
+  virtual void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) {
+    throw "No override defined";
+  }
+
+  // a is a-rate, b is k-rate
+  virtual void process(StereoBuffer &a, float &b, StereoBuffer &out) {
+    throw "No override defined";
+  }
+
+  // a is k-rate, b is a-rate
+  virtual void process(float &a, StereoBuffer &b, StereoBuffer &out) {
+    throw "No override defined";
+  }
+
+  // two k-rate signals
+  virtual void process(float &a, float &b, StereoBuffer &out) {
+    throw "No override difined";
+  }
+};
+class BinaryOperationProcess : public BinaryProcess {
+
+private:
+  virtual inline void processSample(float &a, float &b, float &out) {
+    // Base class does nothing
+  }
+
+public:
+  // Two a-rate signals
+  void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) override {
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(a[i], b[i], out[i]);
   }
 
   // a is a-rate, b is k-rate
-  void process(StereoBuffer &a, float &b, StereoBuffer &out) {
+  void process(StereoBuffer &a, float &b, StereoBuffer &out) override {
     for (int i = 0; i < signalChunkSize * 2; ++i)
-      processSample(a[i] , b, out[i]);
+      processSample(a[i], b, out[i]);
   }
 
   // a is k-rate, b is a-rate
-  void process(float &a, StereoBuffer &b, StereoBuffer &out) {
+  void process(float &a, StereoBuffer &b, StereoBuffer &out) override {
     for (int i = 0; i < signalChunkSize * 2; ++i)
-      processSample(a , b[i], out[i] );
+      processSample(a, b[i], out[i]);
   }
 
   // two k-rate signals
-  void process(float &a, float &b, StereoBuffer &out) {
+  void process(float &a, float &b, StereoBuffer &out) override {
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(a, b, out[i]);
   }
