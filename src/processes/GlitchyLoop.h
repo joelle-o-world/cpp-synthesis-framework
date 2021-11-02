@@ -24,7 +24,7 @@ class GlitchyLoop: public AudioProcess {
       singleUseOsc.process(frequency, internalBuffer);
     }
 
-    void process() {
+    void processStatefully() {
       TypedSignalBuffer &f = *inputs[0], 
                         &out = *outputs[0];
 

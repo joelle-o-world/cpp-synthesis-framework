@@ -22,7 +22,7 @@ class Decay : public AudioProcess {
     level = rightLevel = 1.0;
   }
 
-  void process() {
+  void processStatefully() {
     TypedSignalBuffer &halfLife = *inputs[0], &out = *outputs[0];
     if(halfLife.type == Constant && out.type == Mono)
       process(*halfLife.constant, *out.mono);

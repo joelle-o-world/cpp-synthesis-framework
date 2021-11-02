@@ -31,6 +31,7 @@ public:
   }
 };
 
+
 class Divide : public BinaryOperationProcess {
   private:
     void processSample(float &a, float &b, float &out) override {

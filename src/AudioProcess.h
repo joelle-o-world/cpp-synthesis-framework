@@ -76,7 +76,7 @@ public:
   /**
    * The function that transforms the audio data. Sub-classes override this.
    */
-  virtual void process(){
+  virtual void processStatefully(){
       // Base class does nothing
   };
 };
@@ -85,7 +85,7 @@ class UnaryProcess : public AudioProcess {
 public:
   UnaryProcess() : AudioProcess(1, 1) {}
 
-  void process() override {
+  void processStatefully() override {
     TypedSignalBuffer &in = *inputs[0], out = *outputs[0];
     if (in.type == Stereo && out.type == Stereo)
       process(*in.stereo, *out.stereo);
@@ -114,7 +114,7 @@ class BinaryProcess : public AudioProcess {
 public:
   BinaryProcess() : AudioProcess(2, 1) {}
 
-  void process() override {
+  void processStatefully() override {
 
     TypedSignalBuffer &a = *inputs[0];
     TypedSignalBuffer &b = *inputs[1];
@@ -168,6 +168,33 @@ private:
   }
 
 public:
+
+  void processStatefully() override {
+
+    TypedSignalBuffer &a = *inputs[0];
+    TypedSignalBuffer &b = *inputs[1];
+    TypedSignalBuffer &out = *outputs[0];
+
+    if (out.type == Stereo) {
+      if (a.type == Stereo && b.type == Stereo)
+        process(*a.stereo, *b.stereo, *out.stereo);
+
+      else if (a.type == Stereo && b.type == Constant)
+        process(*a.stereo, *b.constant, *out.stereo);
+
+      else if (a.type == Constant && b.type == Stereo)
+        process(*a.constant, *b.stereo, *out.stereo);
+
+      else if (a.type == Constant && b.type == Constant)
+        process(*a.constant, *b.constant, *out.stereo);
+
+      else
+        throw "unexpected input signal types";
+
+    } else
+      throw "output must be stereo";
+  }
+
   // Two a-rate signals
   void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) override {
     for (int i = 0; i < signalChunkSize * 2; ++i)
@@ -191,4 +218,6 @@ public:
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(a, b, out[i]);
   }
+
+  
 };

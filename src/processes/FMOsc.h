@@ -15,7 +15,7 @@ class FMOsc : public AudioProcess {
   public:
     FMOsc(): AudioProcess(2,1) { }
 
-    void process() {
+    void processStatefully() {
       semitonToRatio.process(*inputs[1], internalBuffer);
       mult.process(*inputs[0], internalBuffer, internalBuffer);
       carrier.process(internalBuffer, *outputs[0]);

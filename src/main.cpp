@@ -47,11 +47,11 @@ int main() {
   for (int i = 0; true; ++i) {
     
     //osc.process();
-    gl.process();
-    decay1.process();
+    gl.processStatefully();
+    decay1.processStatefully();
     //cout << *b2.stereo;
     
-    mult.process();
+    mult.processStatefully();
 
     fwrite(*b1.stereo, sizeof(float), signalChunkSize*2, stdout);
   }
