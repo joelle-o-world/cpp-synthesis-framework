@@ -6,8 +6,9 @@
 #include "./processes/Decay.h"
 #include "./wavetables.h"
 #include "./processes/GlitchyLoop.h"
+#include "./processes/FM2.h"
+#include "AudioProcess.h"
 
-using std::cout;
 int main() {
   initialiseWavetables();
 
@@ -19,12 +20,18 @@ int main() {
   TypedSignalBuffer c1 = {.type = Constant, .constant = &sixtynine};
   TypedSignalBuffer c2 = {.type=Constant, .constant = &hl};
 
+  FM2 fm;
+  for(int i=0; i < 6; ++ i) {
+    TypedSignalBuffer* constant = new TypedSignalBuffer;
+    constant->type = Constant;
+    constant->constant = new float(rand() % 200);
+    fm.inputs[i] = constant;
+  }
+  fm.outputs[0] = &b1;
+
+
 
   Decay decay2;
-
-  GlitchyLoop gl;
-  gl.inputs[0] = &c1;
-  gl.outputs[0] = &b1;
 
   //Osc osc;
   //osc.inputs[0] = &c1;
@@ -47,11 +54,9 @@ int main() {
   for (int i = 0; true; ++i) {
     
     //osc.process();
-    gl.processStatefully();
-    decay1.processStatefully();
+    fm.processStatefully();
     //cout << *b2.stereo;
     
-    mult.processStatefully();
 
     fwrite(*b1.stereo, sizeof(float), signalChunkSize*2, stdout);
   }
