@@ -1,4 +1,5 @@
 *.raw
+.cache
 a.out
 run-tests
 bin
