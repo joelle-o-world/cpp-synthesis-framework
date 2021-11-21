@@ -1,7 +1,10 @@
 #include <iostream>
 #include <portaudio.h>
+#include <math.h>
 
 #define SAMPLE_RATE (44100)
+
+const float PI = 3.1409;
 
 typedef struct {
   float left_phase;
@@ -34,17 +37,17 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
   (void)inputBuffer; /* Prevent unused variable warning. */
 
   for (i = 0; i < framesPerBuffer; i++) {
-    *(out++) = data->left_phase;  /* left */
-    *(out++) = data->right_phase; /* right */
+    *(out++) = sin(data->left_phase * 2 * PI);  /* left */
+    *(out++) = sin(data->right_phase * 2 * PI); /* right */
     /* Generate simple sawtooth phaser that ranges between -1.0 and 1.0. */
     data->left_phase += 0.01f;
     /* When signal reaches top, drop back down. */
     if (data->left_phase >= 1.0f)
-      data->left_phase -= 2.0f;
+      data->left_phase -= 1.0f;
     /* higher pitch so we can distinguish left and right. */
     data->right_phase += 0.03f;
     if (data->right_phase >= 1.0f)
-      data->right_phase -= 2.0f;
+      data->right_phase -= 1.0f;
   }
 
   return 0;
