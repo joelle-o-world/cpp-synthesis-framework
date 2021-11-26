@@ -144,19 +144,19 @@ public:
   virtual void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) {
     throw "No override defined";
   }
-
+  
   // a is a-rate, b is k-rate
-  virtual void process(StereoBuffer &a, float &b, StereoBuffer &out) {
+  virtual void process(StereoBuffer &a, float b, StereoBuffer &out) {
     throw "No override defined";
   }
 
   // a is k-rate, b is a-rate
-  virtual void process(float &a, StereoBuffer &b, StereoBuffer &out) {
+  virtual void process(float a, StereoBuffer &b, StereoBuffer &out) {
     throw "No override defined";
   }
 
   // two k-rate signals
-  virtual void process(float &a, float &b, StereoBuffer &out) {
+  virtual void process(float a, float b, StereoBuffer &out) {
     throw "No override difined";
   }
 };
@@ -176,19 +176,19 @@ public:
   }
 
   // a is a-rate, b is k-rate
-  void process(StereoBuffer &a, float &b, StereoBuffer &out) override {
+  void process(StereoBuffer &a, float b, StereoBuffer &out) override {
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(a[i], b, out[i]);
   }
 
   // a is k-rate, b is a-rate
-  void process(float &a, StereoBuffer &b, StereoBuffer &out) override {
+  void process(float a, StereoBuffer &b, StereoBuffer &out) override {
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(a, b[i], out[i]);
   }
 
   // two k-rate signals
-  void process(float &a, float &b, StereoBuffer &out) override {
+  void process(float a, float b, StereoBuffer &out) override {
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(a, b, out[i]);
   }
