@@ -18,8 +18,10 @@ typedef struct {
 static paTestData data;
 
 Osc osc;
+Clip clip;
 Multiply gain;
 float f = 100;
+float clipamount = 1;
 
 
 int nCallbacks = 0;
@@ -53,7 +55,8 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
     osc.flipPhase();
   }
 
-  //gain.process(*out, .25, *out);
+  clipamount *= .999;
+  clip.process(*out, clipamount, *out);
 
   
 
@@ -62,7 +65,7 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
 
 int main() {
   initialiseWavetables();
-  osc.waveform = &triangleWavetable;
+
 
   PaError err = Pa_Initialize();
   if (err != paNoError)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../AudioProcess.h"
+#include <algorithm>
 #include <math.h>
 
 /**
@@ -8,17 +9,17 @@
  */
 class Add : public BinaryOperationProcess {
 private:
-  void processSample(float &a, float &b, float &out) override { out = a + b; }
+  inline void processSample(float &a, float &b, float &out) override { out = a + b; }
 };
 
 class Subtract : public BinaryOperationProcess {
 private:
-  void processSample(float &a, float &b, float &out) override { out = a - b; }
+  inline void processSample(float &a, float &b, float &out) override { out = a - b; }
 };
 
 class Minus : public UnaryOperationProcess {
 private:
-  void processSample(float &in, float &out) { out = -in; }
+  inline void processSample(float &in, float &out) { out = -in; }
 };
 
 /**
@@ -26,7 +27,7 @@ private:
  */
 class Multiply : public BinaryOperationProcess {
 public:
-  void processSample (float &a, float &b, float &out) override {
+  inline void processSample (float &a, float &b, float &out) override {
     out = a * b;
   }
 };
@@ -34,35 +35,52 @@ public:
 
 class Divide : public BinaryOperationProcess {
   private:
-    void processSample(float &a, float &b, float &out) override {
+    inline void processSample(float &a, float &b, float &out) override {
       out = a / b;
     }
 };
 
 class Invert : public UnaryOperationProcess {
   private:
-    void processSample(float &in, float &out) {
+    inline void processSample(float &in, float &out) {
       out = 1.0 / in;
     }
 };
 
 class Pow : public BinaryOperationProcess {
   private:
-    void processSample(float &a, float &b, float &out) {
+    inline void processSample(float &a, float &b, float &out) {
       out = pow(a, b);
     }
 };
 
 class Sq : public UnaryOperationProcess {
   private:
-    void processSample(float &in, float &out) {
+    inline void processSample(float &in, float &out) {
       out = in * in;
     }
 };
 
 class Sqrt : public UnaryOperationProcess {
   private:
-    void processSample(float &in, float &out) {
+    inline void processSample(float &in, float &out) {
       out = sqrt(in);
+    }
+};
+
+class Clip : public BinaryOperationProcess {
+  private:
+    inline void processSample(float &a, float &b, float &out) {
+      if(a > 0) {
+        if(a > abs(b))
+          out = abs(b);
+        else
+         out = a;
+      } else {
+        if(-a > abs(b))
+          out = -abs(b);
+        else
+         out = a;
+      }
     }
 };
