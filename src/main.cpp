@@ -2,9 +2,13 @@
 #include <portaudio.h>
 #include <math.h>
 
+#include "./processes/Osc.h"
+#include "./wavetables.h"
+#include "AudioProcess.h"
+#include "processes/arithmetic.h"
+
 #define SAMPLE_RATE (44100)
 
-const float PI = 3.1409;
 
 typedef struct {
   float left_phase;
@@ -12,6 +16,9 @@ typedef struct {
 } paTestData;
 
 static paTestData data;
+
+Osc osc;
+Multiply gain;
 
 
 int nCallbacks = 0;
@@ -28,32 +35,28 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
 
 
   std::cout << "Callback: " << ++nCallbacks << "\n";
+  std::cout << "framesPerBuffer " << framesPerBuffer << "\n";
 
 
   /* Cast data passed through stream to our structure. */
   paTestData *data = (paTestData *)userData;
-  float *out = (float *)outputBuffer;
+  StereoBuffer *out = (StereoBuffer *)outputBuffer;
   unsigned int i;
   (void)inputBuffer; /* Prevent unused variable warning. */
 
-  for (i = 0; i < framesPerBuffer; i++) {
-    *(out++) = sin(data->left_phase * 2 * PI);  /* left */
-    *(out++) = sin(data->right_phase * 2 * PI); /* right */
-    /* Generate simple sawtooth phaser that ranges between -1.0 and 1.0. */
-    data->left_phase += 0.01f;
-    /* When signal reaches top, drop back down. */
-    if (data->left_phase >= 1.0f)
-      data->left_phase -= 1.0f;
-    /* higher pitch so we can distinguish left and right. */
-    data->right_phase += 0.03f;
-    if (data->right_phase >= 1.0f)
-      data->right_phase -= 1.0f;
-  }
+  osc.process(440, *out);
+
+  float x = .25;
+  gain.process(*out, x, *out);
+
+  
 
   return 0;
 }
 
 int main() {
+  initialiseWavetables();
+
   PaError err = Pa_Initialize();
   if (err != paNoError)
   {
@@ -69,7 +72,7 @@ int main() {
       &stream, 0,       /* no input channels */
       2,                /* stereo output */
       paFloat32,        /* 32 bit floating point output */
-      SAMPLE_RATE, 256, /* frames per buffer, i.e. the number
+      SAMPLE_RATE, 2048, /* frames per buffer, i.e. the number
                                of sample frames that PortAudio will
                                request from the callback. Many apps
                                may want to use
@@ -94,7 +97,7 @@ int main() {
     return 1;
   }
 
-  Pa_Sleep(500);
+  Pa_Sleep(5000);
 
 
   err = Pa_StopStream( stream );
