@@ -18,6 +18,10 @@ public:
     phase = rightPhase = l;
   }
 
+  void flipPhase() {
+    phase = phase + .5;
+  }
+
   void setPhase(float l, float r) {
     phase = l;
     rightPhase = r;

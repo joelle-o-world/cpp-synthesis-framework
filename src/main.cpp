@@ -19,6 +19,7 @@ static paTestData data;
 
 Osc osc;
 Multiply gain;
+float f = 100;
 
 
 int nCallbacks = 0;
@@ -34,8 +35,6 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
 
 
 
-  std::cout << "Callback: " << ++nCallbacks << "\n";
-  std::cout << "framesPerBuffer " << framesPerBuffer << "\n";
 
 
   /* Cast data passed through stream to our structure. */
@@ -44,10 +43,17 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
   unsigned int i;
   (void)inputBuffer; /* Prevent unused variable warning. */
 
-  osc.process(440, *out);
+  osc.process(f/2, *out);
 
-  float x = .25;
-  gain.process(*out, x, *out);
+  if(f > 50)
+    f -= 16000/ f;
+  else
+  {
+    f = 200;
+    osc.flipPhase();
+  }
+
+  //gain.process(*out, .25, *out);
 
   
 
@@ -56,6 +62,7 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
 
 int main() {
   initialiseWavetables();
+  osc.waveform = &triangleWavetable;
 
   PaError err = Pa_Initialize();
   if (err != paNoError)
@@ -97,7 +104,7 @@ int main() {
     return 1;
   }
 
-  Pa_Sleep(5000);
+  Pa_Sleep(50000);
 
 
   err = Pa_StopStream( stream );
