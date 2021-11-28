@@ -25,8 +25,8 @@ public:
   Osc() : AudioProcess(1, 1) {}
 
   void processStatefully() override {
-    TypedSignalBuffer &frequency = *inputs[0];
-    TypedSignalBuffer &out = *outputs[0];
+    TypedSignalBuffer &frequency = inputs[0].buffer;
+    TypedSignalBuffer &out = outputs[0].buffer;
     if (frequency.type == Mono && out.type == Mono)
       process(*frequency.mono, *out.mono);
 

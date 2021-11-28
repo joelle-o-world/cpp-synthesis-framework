@@ -26,27 +26,17 @@ inline void stereoify(MonoBuffer &a, StereoBuffer &b) {
 class AudioProcess {
 public:
   const unsigned char numberOfInputs;
-
-  /**
-   * The addresses of the audio buffers the process reads from.
-   */
-  TypedSignalBuffer **inputs;
-
   const unsigned char numberOfOutputs;
-  /**
-   * The addresses of the audio buffers the process writes to.
-   */
-  TypedSignalBuffer **outputs;
+
+  std::vector<Inlet> inputs;
+  std::vector<Outlet> outputs;
 
   AudioProcess(unsigned char numberInputs, unsigned char numberOfOutputs)
       : numberOfInputs(numberInputs), numberOfOutputs(numberOfOutputs) {
-    inputs = new TypedSignalBuffer *[numberOfInputs];
-    outputs = new TypedSignalBuffer *[numberOfOutputs];
-  }
 
-  ~AudioProcess() {
-    delete inputs;
-    delete outputs;
+    // TODO: this looks a bit cryptic, sort it out
+    inputs.resize(numberOfInputs);
+    outputs.resize(numberOfOutputs);
   }
 
   /**
@@ -62,7 +52,8 @@ public:
   UnaryProcess() : AudioProcess(1, 1) {}
 
   void processStatefully() override {
-    TypedSignalBuffer &in = *inputs[0], out = *outputs[0];
+    TypedSignalBuffer &in = (inputs[0]).buffer;
+    TypedSignalBuffer &out = (outputs[0]).buffer;
     if (in.type == Stereo && out.type == Stereo)
       process(*in.stereo, *out.stereo);
     else
@@ -92,9 +83,9 @@ public:
 
   void processStatefully() override {
 
-    TypedSignalBuffer &a = *inputs[0];
-    TypedSignalBuffer &b = *inputs[1];
-    TypedSignalBuffer &out = *outputs[0];
+    TypedSignalBuffer &a = inputs[0].buffer;
+    TypedSignalBuffer &b = inputs[1].buffer;
+    TypedSignalBuffer &out = outputs[0].buffer;
 
     if (out.type == Stereo) {
       if (a.type == Stereo && b.type == Stereo)
