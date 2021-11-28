@@ -52,8 +52,8 @@ public:
   UnaryProcess() : AudioProcess(1, 1) {}
 
   void processStatefully() override {
-    TypedSignalBuffer &in = (inputs[0]).buffer;
-    TypedSignalBuffer &out = (outputs[0]).buffer;
+    TypedSignalBuffer &in = *(inputs[0].buffer);
+    TypedSignalBuffer &out = *(outputs[0].buffer);
     if (in.type == Stereo && out.type == Stereo)
       process(*in.stereo, *out.stereo);
     else
@@ -83,9 +83,9 @@ public:
 
   void processStatefully() override {
 
-    TypedSignalBuffer &a = inputs[0].buffer;
-    TypedSignalBuffer &b = inputs[1].buffer;
-    TypedSignalBuffer &out = outputs[0].buffer;
+    TypedSignalBuffer &a = *(inputs[0].buffer);
+    TypedSignalBuffer &b = *inputs[1].buffer;
+    TypedSignalBuffer &out = *outputs[0].buffer;
 
     if (out.type == Stereo) {
       if (a.type == Stereo && b.type == Stereo)

@@ -5,19 +5,37 @@
  */
 
 #include "TypedSignalBuffer.h"
+#include <set>
+#include <vector>
 
 class AudioProcess;
+class Inlet;
+
+class Outlet {
+  friend Inlet;
+
+private:
+  std::set<Inlet *> connectedTo;
+
+public:
+  TypedSignalBuffer *buffer;
+  AudioProcess *owner;
+};
 
 class Inlet {
 public:
-  TypedSignalBuffer buffer;
+  TypedSignalBuffer *buffer;
   AudioProcess *owner;
-};
+  Outlet *connectedTo;
 
-class Outlet {
-public:
-  TypedSignalBuffer buffer;
-  AudioProcess *owner;
-};
+  void connect(Outlet &outlet) {
+    disconnect();
+    connectedTo = &outlet;
+    outlet.connectedTo.insert(this);
+  }
 
-void connect(Outlet &outlet, Inlet &inlet);
+  void disconnect() {
+    connectedTo->connectedTo.erase(this);
+    connectedTo = nullptr;
+  }
+};
