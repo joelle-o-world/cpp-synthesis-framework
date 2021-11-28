@@ -1,6 +1,5 @@
 #pragma once
 #include "../AudioProcess.h"
-#include "../AudioProcessCoordinator.h"
 #include "../wavetables.h"
 
 /**
@@ -14,13 +13,9 @@ public:
   float frequency = 440;
   Wavetable *waveform = &sineWavetable;
 
-  void setPhase(float l) {
-    phase = rightPhase = l;
-  }
+  void setPhase(float l) { phase = rightPhase = l; }
 
-  void flipPhase() {
-    phase = phase + .5;
-  }
+  void flipPhase() { phase = phase + .5; }
 
   void setPhase(float l, float r) {
     phase = l;
@@ -30,29 +25,26 @@ public:
   Osc() : AudioProcess(1, 1) {}
 
   void processStatefully() override {
-    TypedSignalBuffer& frequency = *inputs[0];
-    TypedSignalBuffer& out = *outputs[0];
-    if(frequency.type == Mono && out.type == Mono)
+    TypedSignalBuffer &frequency = *inputs[0];
+    TypedSignalBuffer &out = *outputs[0];
+    if (frequency.type == Mono && out.type == Mono)
       process(*frequency.mono, *out.mono);
 
-    else if(frequency.type == Mono && out.type == Stereo)
+    else if (frequency.type == Mono && out.type == Stereo)
       process(*frequency.mono, *out.stereo);
 
-    else if(frequency.type == Stereo && out.type == Stereo)
+    else if (frequency.type == Stereo && out.type == Stereo)
       process(*frequency.stereo, *out.stereo);
 
-    else if(frequency.type == Constant && out.type == Mono)
+    else if (frequency.type == Constant && out.type == Mono)
       process(*frequency.constant, *out.mono);
 
-    else if(frequency.type == Constant && out.type == Stereo)
+    else if (frequency.type == Constant && out.type == Stereo)
       process(*frequency.constant, *out.stereo);
 
     else
       throw "Unexpected io";
   }
-
-
-
 
   // a-rate monophonic mode
   void process(MonoBuffer &frequency, MonoBuffer &out) {
@@ -70,7 +62,7 @@ public:
 
   // a-rate mono-to-stereo mode
   void process(MonoBuffer &frequency, StereoBuffer &out) {
-    for (int i = 0; i < signalChunkSize*2; i+=2) {
+    for (int i = 0; i < signalChunkSize * 2; i += 2) {
       phase += frequency[i] * sampleInterval;
       while (phase > 1)
         --phase;
@@ -85,7 +77,7 @@ public:
 
   // a-rate stereo mode
   void process(StereoBuffer &frequency, StereoBuffer &out) {
-    for (int i = 0; i < signalChunkSize*2; i+=2) {
+    for (int i = 0; i < signalChunkSize * 2; i += 2) {
       phase += frequency[i] * sampleInterval;
       while (phase > 1)
         --phase;
@@ -95,8 +87,8 @@ public:
       int j = phase * WAVETABLE_SIZE;
       out[i] = (*waveform)[j];
       out[i + 1] = out[i];
-    }    
-    for (int i = 1; i < signalChunkSize*2; i+=2) {
+    }
+    for (int i = 1; i < signalChunkSize * 2; i += 2) {
       rightPhase += frequency[i] * sampleInterval;
       while (rightPhase > 1)
         --rightPhase;
@@ -106,8 +98,6 @@ public:
       int j = rightPhase * WAVETABLE_SIZE;
       out[i + 1] = out[i];
     }
-
-
   }
 
   // k-rate mono mode
@@ -124,7 +114,7 @@ public:
   }
 
   void process(float frequency, StereoBuffer &out) {
-    for (int i = 0; i < signalChunkSize*2; i+=2) {
+    for (int i = 0; i < signalChunkSize * 2; i += 2) {
       phase += frequency * sampleInterval;
       while (phase > 1)
         --phase;
@@ -132,8 +122,7 @@ public:
         ++phase;
       int j = phase * WAVETABLE_SIZE;
       out[i] = (*waveform)[j];
-      out[i+1] = out[i];
+      out[i + 1] = out[i];
     }
   }
-
 };

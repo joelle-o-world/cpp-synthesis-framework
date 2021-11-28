@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include "TypedSignalBuffer.h"
+#include "nodeIo.h"
+#include <vector>
 
 inline void stereoify(MonoBuffer &a, StereoBuffer &b) {
   for (int i = signalChunkSize - 1; i >= 0; --i)
@@ -119,7 +120,7 @@ public:
   virtual void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) {
     throw "No override defined";
   }
-  
+
   // a is a-rate, b is k-rate
   virtual void process(StereoBuffer &a, float b, StereoBuffer &out) {
     throw "No override defined";
@@ -143,7 +144,6 @@ private:
   }
 
 public:
-
   // Two a-rate signals
   void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) override {
     for (int i = 0; i < signalChunkSize * 2; ++i)
@@ -167,6 +167,4 @@ public:
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(a, b, out[i]);
   }
-
-  
 };
