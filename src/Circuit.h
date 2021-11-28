@@ -5,11 +5,19 @@
 #include <vector>
 
 class Circuit {
+private:
   AudioProcess *exitNode;
   std::vector<AudioProcess *> firingOrder;
 
+public:
   Circuit(AudioProcess *exitNode) { exitNode = exitNode; }
 
+  void process() {
+    for (AudioProcess *node : firingOrder)
+      node->processStatefully();
+  }
+
+private:
   /**
    * Recalculates the firing order for all nodes and saves to `firingOrder`
    * property.
