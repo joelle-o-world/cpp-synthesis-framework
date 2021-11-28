@@ -2,6 +2,7 @@
 
 #include "TypedSignalBuffer.h"
 #include "nodeIo.h"
+#include <set>
 #include <vector>
 
 inline void stereoify(MonoBuffer &a, StereoBuffer &b) {
@@ -45,6 +46,14 @@ public:
   virtual void processStatefully(){
       // Base class does nothing
   };
+
+  std::set<AudioProcess *> *dependencies() {
+    std::set<AudioProcess *> *set = new std::set<AudioProcess *>;
+    for (Inlet &inlet : inputs)
+      if (inlet.connectedTo)
+        set->insert(inlet.connectedTo->owner);
+    return set;
+  }
 };
 
 class UnaryProcess : public AudioProcess {
