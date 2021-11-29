@@ -14,10 +14,8 @@ class Inlet;
 class Outlet {
   friend Inlet;
 
-private:
-  std::set<Inlet *> connectedTo;
-
 public:
+  std::set<Inlet *> connectedTo;
   TypedSignalBuffer *buffer;
   AudioProcess *owner;
 };

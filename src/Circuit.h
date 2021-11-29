@@ -1,6 +1,8 @@
 #pragma once
 
 #include "AudioProcess.h"
+#include "TypedSignalBuffer.h"
+#include <algorithm>
 #include <set>
 #include <vector>
 
@@ -35,6 +37,27 @@ private:
       }
       delete dependencies;
     }
+    std::reverse(firingOrder.begin(), firingOrder.end());
     return firingOrder;
+  }
+
+  void allocateBuffers() {
+    // TODO: This could be optimised with a buffer pool
+    for (AudioProcess *node : firingOrder)
+      for (Outlet &outlet : node->outputs) {
+        outlet.buffer = new TypedSignalBuffer;
+        for (Inlet *inlet : outlet.connectedTo)
+          inlet->buffer = outlet.buffer;
+      }
+  }
+
+  void deallocateBuffers() {
+    for (AudioProcess *node : firingOrder)
+      for (Outlet &outlet : node->outputs) {
+        delete outlet.buffer;
+        outlet.buffer = nullptr;
+        for (Inlet *inlet : outlet.connectedTo)
+          inlet->buffer = nullptr;
+      }
   }
 };
