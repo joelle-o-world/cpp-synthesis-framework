@@ -6,18 +6,29 @@
 #include <set>
 #include <vector>
 
+#include <iostream>
+
 class Circuit {
 private:
   AudioProcess *exitNode;
   std::vector<AudioProcess *> firingOrder;
 
 public:
-  Circuit(AudioProcess *exitNode) { exitNode = exitNode; }
+  Circuit(AudioProcess *exitNode) : exitNode(exitNode) {}
+  Circuit(AudioProcess &exitNode) : exitNode(&exitNode) {}
+  ~Circuit() { deallocateBuffers(); }
 
   void process() {
     for (AudioProcess *node : firingOrder)
       node->processStatefully();
   }
+
+  void prepare() {
+    refreshFiringOrder();
+    allocateBuffers();
+  }
+
+  TypedSignalBuffer *exitBuffer() { return exitNode->outputs[0].buffer; }
 
 private:
   /**
@@ -43,9 +54,13 @@ private:
 
   void allocateBuffers() {
     // TODO: This could be optimised with a buffer pool
+    std::cout << "Allocating buffers...\n";
     for (AudioProcess *node : firingOrder)
       for (Outlet &outlet : node->outputs) {
+        std::cout << "Allocating a buffer\n";
         outlet.buffer = new TypedSignalBuffer;
+        outlet.buffer->type = Stereo;
+        outlet.buffer->stereo = (StereoBuffer *)(void *)new StereoBuffer;
         for (Inlet *inlet : outlet.connectedTo)
           inlet->buffer = outlet.buffer;
       }
@@ -54,6 +69,7 @@ private:
   void deallocateBuffers() {
     for (AudioProcess *node : firingOrder)
       for (Outlet &outlet : node->outputs) {
+        // TODO: delete outlet.buffer->stereo
         delete outlet.buffer;
         outlet.buffer = nullptr;
         for (Inlet *inlet : outlet.connectedTo)

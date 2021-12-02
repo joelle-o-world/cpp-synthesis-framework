@@ -23,3 +23,5 @@ struct TypedSignalBuffer {
     MIDIBuffer *midi;
   };
 };
+
+void copyData(TypedSignalBuffer *from, StereoBuffer *to);

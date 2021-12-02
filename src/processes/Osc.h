@@ -1,6 +1,7 @@
 #pragma once
 #include "../AudioProcess.h"
 #include "../wavetables.h"
+#include <iostream>
 
 /**
  * Simple k/a-rate frequency wavetable oscillator.
@@ -11,7 +12,7 @@ class Osc : public AudioProcess {
 
 public:
   float frequency = 440;
-  Wavetable *waveform = &sineWavetable;
+  Wavetable *waveform;
 
   void setPhase(float l) { phase = rightPhase = l; }
 
@@ -25,8 +26,10 @@ public:
   Osc() : AudioProcess(1, 1) {}
 
   void processStatefully() override {
+    std::cout << "Osc::processStatefully\n";
     TypedSignalBuffer &frequency = *inputs[0].buffer;
     TypedSignalBuffer &out = *outputs[0].buffer;
+
     if (frequency.type == Mono && out.type == Mono)
       process(*frequency.mono, *out.mono);
 
@@ -41,9 +44,8 @@ public:
 
     else if (frequency.type == Constant && out.type == Stereo)
       process(*frequency.constant, *out.stereo);
-
     else
-      throw "Unexpected io";
+      throw 1;
   }
 
   // a-rate monophonic mode

@@ -8,13 +8,13 @@ const float logHalf = log(.5);
 // TODO: split this class into three classes, Decay and HalfLife and
 // RecursiveMultiplier
 
-float halfLifeToScalar(float halfLife) {
-  return pow(2, -1 / (sampleRate * halfLife));
-};
-
 class Decay : public AudioProcess {
   float level;
   float rightLevel;
+
+  static float halfLifeToScalar(float halfLife) {
+    return pow(2, -1 / (sampleRate * halfLife));
+  };
 
 public:
   Decay() : AudioProcess(1, 1) {}
