@@ -2,6 +2,7 @@
 #include "../AudioProcess.h"
 #include "../wavetables.h"
 #include <iostream>
+#include <string>
 
 /**
  * Simple k/a-rate frequency wavetable oscillator.
@@ -26,7 +27,6 @@ public:
   Osc() : AudioProcess(1, 1) {}
 
   void processStatefully() override {
-    std::cout << "Osc::processStatefully\n";
     TypedSignalBuffer &frequency = *inputs[0].buffer;
     TypedSignalBuffer &out = *outputs[0].buffer;
 
@@ -127,4 +127,6 @@ public:
       out[i + 1] = out[i];
     }
   }
+
+  std::string describe() override { return "Osc"; }
 };

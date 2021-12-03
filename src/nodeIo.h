@@ -28,6 +28,12 @@ public:
   Outlet *connectedTo;
   bool isConstant;
 
+  Inlet() {
+    connectedTo = nullptr;
+    owner = nullptr;
+    isConstant = false;
+  }
+
   void connect(Outlet &outlet) {
     disconnect();
     connectedTo = &outlet;

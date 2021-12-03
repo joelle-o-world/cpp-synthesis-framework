@@ -3,6 +3,7 @@
 #include "TypedSignalBuffer.h"
 #include "nodeIo.h"
 #include <set>
+#include <string>
 #include <vector>
 
 inline void stereoify(MonoBuffer &a, StereoBuffer &b) {
@@ -38,6 +39,10 @@ public:
     // TODO: this looks a bit cryptic, sort it out
     inputs.resize(numberOfInputs);
     outputs.resize(numberOfOutputs);
+    for (int i = 0; i < numberInputs; ++i)
+      inputs[i].owner = this;
+    for (int i = 0; i < numberOfOutputs; ++i)
+      outputs[i].owner = this;
   }
 
   /**
@@ -54,6 +59,8 @@ public:
         set->insert(inlet.connectedTo->owner);
     return set;
   }
+
+  virtual std::string describe() { return "unnamed AudioProcess"; }
 };
 
 class UnaryProcess : public AudioProcess {

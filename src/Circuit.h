@@ -36,9 +36,11 @@ private:
    * property.
    */
   std::vector<AudioProcess *> &refreshFiringOrder() {
+    std::cout << "refreshFiringOrder\n";
     firingOrder.clear();
     firingOrder.push_back(exitNode);
     for (int i = 0; i < firingOrder.size(); ++i) {
+      std::cout << "i: " << i << " " << firingOrder[i]->describe() << "\n";
       std::set<AudioProcess *> *dependencies = firingOrder[i]->dependencies();
       for (AudioProcess *dependency : *dependencies) {
         if (std::find(firingOrder.begin(), firingOrder.end(), dependency) ==
@@ -48,6 +50,7 @@ private:
       }
       delete dependencies;
     }
+    std::cout << "reversing";
     std::reverse(firingOrder.begin(), firingOrder.end());
     return firingOrder;
   }

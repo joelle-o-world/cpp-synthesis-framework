@@ -41,7 +41,6 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
   
   data->nowPlayingCircuit->process();
   
-  std::cout << "!!!\n";
   copyData(data->nowPlayingCircuit->exitBuffer(), out);
 
   
