@@ -5,42 +5,41 @@
 
 const float logHalf = log(.5);
 
-// TODO: split this class into three classes, Decay and HalfLife and RecursiveMultiplier
-
-float halfLifeToScalar(float halfLife) {
-  return pow(2 , -1 / (sampleRate * halfLife));
-};
+// TODO: split this class into three classes, Decay and HalfLife and
+// RecursiveMultiplier
 
 class Decay : public AudioProcess {
   float level;
   float rightLevel;
 
-  public:
+  static float halfLifeToScalar(float halfLife) {
+    return pow(2, -1 / (sampleRate * halfLife));
+  };
+
+public:
   Decay() : AudioProcess(1, 1) {}
 
-  void retrigger() {
-    level = rightLevel = 1.0;
-  }
+  void retrigger() { level = rightLevel = 1.0; }
 
   void processStatefully() {
-    TypedSignalBuffer &halfLife = *inputs[0], &out = *outputs[0];
-    if(halfLife.type == Constant && out.type == Mono)
+    TypedSignalBuffer &halfLife = *inputs[0].buffer, &out = *outputs[0].buffer;
+    if (halfLife.type == Constant && out.type == Mono)
       process(*halfLife.constant, *out.mono);
 
-    else if(halfLife.type == Constant && out.type == Stereo)
+    else if (halfLife.type == Constant && out.type == Stereo)
       process(*halfLife.constant, *out.stereo);
 
-    else if(halfLife.type == Mono && out.type == Mono)
+    else if (halfLife.type == Mono && out.type == Mono)
       process(*halfLife.mono, *out.mono);
 
-    else if(halfLife.type == Mono && out.type == Stereo)
+    else if (halfLife.type == Mono && out.type == Stereo)
       process(*halfLife.mono, *out.stereo);
 
-    else if(halfLife.type == Stereo &&  out.type == Stereo)
+    else if (halfLife.type == Stereo && out.type == Stereo)
       process(*halfLife.stereo, *out.stereo);
 
     else
-     throw "Unexpected signal types";
+      throw "Unexpected signal types";
   }
 
   void process(float halfLife, MonoBuffer &out) {

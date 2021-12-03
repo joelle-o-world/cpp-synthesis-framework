@@ -1,37 +1,14 @@
 #pragma once
 
+#include "TypedSignalBuffer.h"
+#include "nodeIo.h"
+#include <set>
 #include <vector>
-
-const int signalChunkSize = 2048;
-const int sampleRate = 44100;
-const float sampleInterval = 1.0 / float(sampleRate);
-typedef float SignalBuffer[signalChunkSize];
-
-typedef float StereoBuffer[signalChunkSize * 2];
-typedef float MonoBuffer[signalChunkSize];
-typedef float MonoConstant;
-typedef float StereoConstant;
-typedef void *MIDIBuffer; // TODO: Future
 
 inline void stereoify(MonoBuffer &a, StereoBuffer &b) {
   for (int i = signalChunkSize - 1; i >= 0; --i)
     b[i * 2] = b[i * 2 + 1] = a[i];
 };
-
-enum SignalType : unsigned char { Stereo = 1, Mono, Constant, MIDIData };
-
-struct TypedSignalBuffer {
-  SignalType type;
-
-  union {
-    StereoBuffer *stereo;
-    MonoBuffer *mono;
-    float *constant;
-    MIDIBuffer *midi;
-  };
-};
-
-typedef unsigned char *IOSignature;
 
 /**
  * Base class for audio processes.
@@ -50,27 +27,17 @@ typedef unsigned char *IOSignature;
 class AudioProcess {
 public:
   const unsigned char numberOfInputs;
-
-  /**
-   * The addresses of the audio buffers the process reads from.
-   */
-  TypedSignalBuffer **inputs;
-
   const unsigned char numberOfOutputs;
-  /**
-   * The addresses of the audio buffers the process writes to.
-   */
-  TypedSignalBuffer **outputs;
+
+  std::vector<Inlet> inputs;
+  std::vector<Outlet> outputs;
 
   AudioProcess(unsigned char numberInputs, unsigned char numberOfOutputs)
       : numberOfInputs(numberInputs), numberOfOutputs(numberOfOutputs) {
-    inputs = new TypedSignalBuffer *[numberOfInputs];
-    outputs = new TypedSignalBuffer *[numberOfOutputs];
-  }
 
-  ~AudioProcess() {
-    delete inputs;
-    delete outputs;
+    // TODO: this looks a bit cryptic, sort it out
+    inputs.resize(numberOfInputs);
+    outputs.resize(numberOfOutputs);
   }
 
   /**
@@ -79,6 +46,14 @@ public:
   virtual void processStatefully(){
       // Base class does nothing
   };
+
+  std::set<AudioProcess *> *dependencies() {
+    std::set<AudioProcess *> *set = new std::set<AudioProcess *>;
+    for (Inlet &inlet : inputs)
+      if (inlet.connectedTo)
+        set->insert(inlet.connectedTo->owner);
+    return set;
+  }
 };
 
 class UnaryProcess : public AudioProcess {
@@ -86,7 +61,8 @@ public:
   UnaryProcess() : AudioProcess(1, 1) {}
 
   void processStatefully() override {
-    TypedSignalBuffer &in = *inputs[0], out = *outputs[0];
+    TypedSignalBuffer &in = *(inputs[0].buffer);
+    TypedSignalBuffer &out = *(outputs[0].buffer);
     if (in.type == Stereo && out.type == Stereo)
       process(*in.stereo, *out.stereo);
     else
@@ -116,9 +92,9 @@ public:
 
   void processStatefully() override {
 
-    TypedSignalBuffer &a = *inputs[0];
-    TypedSignalBuffer &b = *inputs[1];
-    TypedSignalBuffer &out = *outputs[0];
+    TypedSignalBuffer &a = *(inputs[0].buffer);
+    TypedSignalBuffer &b = *inputs[1].buffer;
+    TypedSignalBuffer &out = *outputs[0].buffer;
 
     if (out.type == Stereo) {
       if (a.type == Stereo && b.type == Stereo)
@@ -144,7 +120,7 @@ public:
   virtual void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) {
     throw "No override defined";
   }
-  
+
   // a is a-rate, b is k-rate
   virtual void process(StereoBuffer &a, float b, StereoBuffer &out) {
     throw "No override defined";
@@ -168,7 +144,6 @@ private:
   }
 
 public:
-
   // Two a-rate signals
   void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) override {
     for (int i = 0; i < signalChunkSize * 2; ++i)
@@ -192,6 +167,4 @@ public:
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(a, b, out[i]);
   }
-
-  
 };
