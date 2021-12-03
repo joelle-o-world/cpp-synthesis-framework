@@ -2,6 +2,7 @@
 
 #include "../AudioProcess.h"
 #include <math.h>
+#include <string>
 
 const float logHalf = log(.5);
 
@@ -18,10 +19,11 @@ class Decay : public AudioProcess {
 
 public:
   Decay() : AudioProcess(1, 1) {}
+  std::string describe() override { return "Decay"; }
 
   void retrigger() { level = rightLevel = 1.0; }
 
-  void processStatefully() {
+  void processStatefully() override {
     TypedSignalBuffer &halfLife = *inputs[0].buffer, &out = *outputs[0].buffer;
     if (halfLife.type == Constant && out.type == Mono)
       process(*halfLife.constant, *out.mono);
