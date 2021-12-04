@@ -1,12 +1,14 @@
 # C++ audio synthesis framework
 
-This is a C++ library for creating efficient audio synthesizers in C++. 
+This is a C++ library for creating musical synthesizers in C++. 
 
+## Dependencies
+- [portaudio]() for audio playback
+- [graph-easy]() for rendering graphs
 
 To run,
 
 ```sh
-make play
+make && bin/play
 ```
 
-You may need to install SoX: `brew install sox`
