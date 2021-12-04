@@ -58,7 +58,7 @@ int play(Circuit& circuit) {
     return 1;
   }
 
-  std::cout << "Initialised port audio!\n";
+  //std::cout << "Initialised port audio!\n";
 
   PaStream *stream;
   /* Open an audio I/O stream. */
@@ -82,7 +82,7 @@ int play(Circuit& circuit) {
     return 1;
   }
 
-  std::cout << "Opened a port audio stream!!\n";
+  //std::cout << "Opened a port audio stream!!\n";
 
 
   err = Pa_StartStream( stream );
