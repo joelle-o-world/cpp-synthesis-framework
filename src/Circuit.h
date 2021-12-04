@@ -2,6 +2,7 @@
 
 #include "AudioProcess.h"
 #include "TypedSignalBuffer.h"
+#include "utils/ordinal.h"
 #include <algorithm>
 #include <iterator>
 #include <ostream>
@@ -113,5 +114,40 @@ public:
       }
     }
     out << "}\n";
+  }
+  void easyGraph(std::ostream &out) {
+    int constantCount = 0;
+    out << "[ p" << (firingOrder.size() - 1) << " ] -> [ OUT ] {border:none}\n";
+    for (int i = 0; i < firingOrder.size(); ++i) {
+      AudioProcess *p = firingOrder[i];
+      std::string iname = "[ p" + std::to_string(i) + " ]";
+      out << iname << " ";
+      std::string label = p->describe() + " (" + ordinal(i) + ")";
+      out << "{label:\"" << label << "\"; border: none; }";
+      out << "\n";
+      for (Inlet &inlet : p->inputs) {
+        if (inlet.connectedTo) {
+          auto it = std::find(firingOrder.begin(), firingOrder.end(),
+                              inlet.connectedTo->owner);
+          if (it != firingOrder.end()) {
+            int j = std::distance(firingOrder.begin(), it);
+
+            std::string jname = "[ p" + std::to_string(j) + " ]";
+
+            out << jname << " --> " << iname << "\n";
+          }
+        } else if (inlet.isConstant && inlet.buffer->type == Constant) {
+          auto value = inlet.buffer->constant;
+          std::string constantName =
+              "[ c" + std::to_string(constantCount++) + " ]";
+          out << constantName << " ";
+          out << "{label: \"" << std::to_string(*value)
+              << "\"; border: none; }\n";
+          out << "\n";
+
+          out << constantName << " --> " << iname << "\n";
+        }
+      }
+    }
   }
 };

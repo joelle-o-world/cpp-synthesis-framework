@@ -23,7 +23,7 @@ void goBoop() {
 
 
   circuit.prepare();
-  circuit.dotGraph(std::cout);
+  circuit.easyGraph(std::cout);
 
   //play(circuit);
 
