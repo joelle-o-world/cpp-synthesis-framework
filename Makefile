@@ -6,4 +6,4 @@ FLAGS=-I ../include -I ../vendor/include -std=c++14 -stdlib=libc++ -fPIC -isyste
 default:
 	rm -rf bin
 	mkdir bin
-	${CC} src/main.cpp src/wavetables.cpp src/utils/ordinal.cpp src/play.cpp src/TypedSignalBuffer.cpp src/programs/goBoop.cpp ${FLAGS} -o bin/play
+	${CC} src/main.cpp src/wavetables.cpp src/nodeIo.cpp src/utils/ordinal.cpp src/play.cpp src/TypedSignalBuffer.cpp src/programs/goBoop.cpp ${FLAGS} -o bin/play

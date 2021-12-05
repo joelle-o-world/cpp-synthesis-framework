@@ -28,36 +28,12 @@ public:
   Outlet *connectedTo;
   bool isConstant;
 
-  Inlet() {
-    connectedTo = nullptr;
-    owner = nullptr;
-    isConstant = false;
-  }
+  Inlet();
 
-  void connect(Outlet &outlet) {
-    disconnect();
-    connectedTo = &outlet;
-    outlet.connectedTo.insert(this);
-  }
+  void connect(Outlet &outlet);
+  void connect(float constant);
 
-  void connect(float constant) {
-    isConstant = true;
-    buffer = new TypedSignalBuffer;
-    buffer->type = Constant;
-    buffer->constant = new float(constant);
-  }
+  void disconnect();
 
-  void disconnect() {
-    isConstant = false;
-    if (connectedTo)
-      connectedTo->connectedTo.erase(this);
-    connectedTo = nullptr;
-  }
-
-  void healthCheck() {
-    if (!isConstant && !connectedTo) {
-      std::cerr << "Unhealthy Inlet!\n";
-      throw 1;
-    }
-  }
+  void healthCheck();
 };
