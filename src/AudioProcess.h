@@ -33,34 +33,16 @@ public:
   std::vector<Inlet> inputs;
   std::vector<Outlet> outputs;
 
-  AudioProcess(unsigned char numberInputs, unsigned char numberOfOutputs)
-      : numberOfInputs(numberInputs), numberOfOutputs(numberOfOutputs) {
-
-    // TODO: this looks a bit cryptic, sort it out
-    inputs.resize(numberOfInputs);
-    outputs.resize(numberOfOutputs);
-    for (int i = 0; i < numberInputs; ++i)
-      inputs[i].owner = this;
-    for (int i = 0; i < numberOfOutputs; ++i)
-      outputs[i].owner = this;
-  }
+  AudioProcess(unsigned char numberInputs, unsigned char numberOfOutputs);
 
   /**
    * The function that transforms the audio data. Sub-classes override this.
    */
-  virtual void processStatefully(){
-      // Base class does nothing
-  };
+  virtual void processStatefully();
 
-  std::set<AudioProcess *> *dependencies() {
-    std::set<AudioProcess *> *set = new std::set<AudioProcess *>;
-    for (Inlet &inlet : inputs)
-      if (inlet.connectedTo)
-        set->insert(inlet.connectedTo->owner);
-    return set;
-  }
+  std::set<AudioProcess *> *dependencies();
 
-  virtual std::string describe() { return "unnamed AudioProcess"; }
+  virtual std::string describe();
 };
 
 class UnaryProcess : public AudioProcess {
