@@ -11,6 +11,8 @@ inline void stereoify(MonoBuffer &a, StereoBuffer &b) {
     b[i * 2] = b[i * 2 + 1] = a[i];
 };
 
+typedef enum { triggered, done } TriggerState;
+
 /**
  * Base class for audio processes.
  *
@@ -29,12 +31,14 @@ class AudioProcess {
 public:
   const unsigned char numberOfInputs;
   const unsigned char numberOfOutputs;
+  TriggerState triggerState;
 
   std::vector<Inlet> inputs;
   std::vector<Outlet> outputs;
 
   AudioProcess(unsigned char numberInputs, unsigned char numberOfOutputs)
-      : numberOfInputs(numberInputs), numberOfOutputs(numberOfOutputs) {
+      : numberOfInputs(numberInputs), numberOfOutputs(numberOfOutputs),
+        triggerState(done) {
 
     // TODO: this looks a bit cryptic, sort it out
     inputs.resize(numberOfInputs);
@@ -43,6 +47,23 @@ public:
       inputs[i].owner = this;
     for (int i = 0; i < numberOfOutputs; ++i)
       outputs[i].owner = this;
+  }
+
+  void fire() {
+    if (triggerState == triggered) {
+      return;
+    } else {
+      triggerState = triggered;
+      for (Inlet &input : inputs)
+        input.connectedTo->owner->fire();
+
+      // TODO: Allocate buffers to outputs
+      // process();
+      std::cout << "Processed: " << describe() << "\n";
+      // TODO: Release buffers from inputs
+
+      triggerState = done;
+    }
   }
 
   /**
