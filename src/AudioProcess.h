@@ -1,7 +1,9 @@
 #pragma once
 
+#include "BufferPool.h"
 #include "TypedSignalBuffer.h"
 #include "nodeIo.h"
+#include <iostream>
 #include <set>
 #include <string>
 #include <vector>
@@ -28,6 +30,8 @@ typedef enum { triggered, done } TriggerState;
  * AudioProcessCoordinator subclasses.
  */
 class AudioProcess {
+  static BufferPool<float, 4096> bufferPool;
+
 public:
   const unsigned char numberOfInputs;
   const unsigned char numberOfOutputs;
@@ -50,6 +54,7 @@ public:
   }
 
   void fire() {
+    std::cout << describe() << ".fire()\n";
     if (triggerState == triggered) {
       return;
     } else {
@@ -57,10 +62,25 @@ public:
       for (Inlet &input : inputs)
         input.connectedTo->owner->fire();
 
-      // TODO: Allocate buffers to outputs
-      // process();
+      std::cout << "\nallocating outlet buffers for " << describe() << "\n";
+      for (Outlet &outlet : outputs) {
+        std::cout << "allocating..\n";
+        // outlet.buffer->stereo = nullptr;
+        outlet.bufferptr = bufferPool.allocate(outlet.deallocationIndex);
+        std::cout << "Allocated\n";
+        for (Inlet *inlet : outlet.connectedTo)
+          inlet->bufferptr = outlet.bufferptr;
+        outlet.readers = outlet.connectedTo.size();
+      }
+      std::cout << "about to process " << describe() << "\n";
+      process();
       std::cout << "Processed: " << describe() << "\n";
-      // TODO: Release buffers from inputs
+      for (Inlet &inlet : inputs) {
+        if (--inlet.connectedTo->readers == 0) {
+          std::cout << "Deallocating\n";
+          bufferPool.release(inlet.connectedTo->deallocationIndex);
+        }
+      }
 
       triggerState = done;
     }
@@ -94,8 +114,8 @@ public:
   }
 
   void process() {
-    float *in = (float *)inputs[0].buffer->stereo;
-    float *out = (float *)outputs[0].buffer->stereo;
+    float *in = (float *)inputs[0].bufferptr;
+    float *out = (float *)outputs[0].bufferptr;
 
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(out[i], in[i]);
@@ -114,9 +134,9 @@ private:
 public:
   // Two a-rate signals
   void process() override {
-    float *a = (float *)inputs[0].buffer->stereo;
-    float *b = (float *)inputs[1].buffer->stereo;
-    float *out = (float *)outputs[0].buffer->stereo;
+    float *a = (float *)inputs[0].bufferptr;
+    float *b = (float *)inputs[1].bufferptr;
+    float *out = (float *)outputs[0].bufferptr;
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(a[i], b[i], out[i]);
   }

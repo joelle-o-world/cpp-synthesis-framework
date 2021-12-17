@@ -13,7 +13,7 @@
 #define SAMPLE_RATE (44100)
 
 typedef struct {
-  Circuit *nowPlayingCircuit;
+  Outlet *output;
 } paTestData;
 
 static paTestData data;
@@ -28,20 +28,20 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
   /* Cast data passed through stream to our structure. */
   paTestData *data = (paTestData *)userData;
 
-  StereoBuffer *out = (StereoBuffer *)outputBuffer;
+  float *out = (float *)outputBuffer;
   unsigned int i;
   (void)inputBuffer; /* Prevent unused variable warning. */
 
-  data->nowPlayingCircuit->process();
+  data->output->owner->fire();
 
-  copyData(data->nowPlayingCircuit->exitBuffer(), out);
+  copyData((float *)data->output->bufferptr, out);
 
   return 0;
 }
 
-int play(Circuit &circuit) {
-  circuit.prepare();
-  data = {&circuit};
+int play(Outlet &outlet) {
+  // circuit.prepare();
+  data = {&outlet};
   PaError err = Pa_Initialize();
   if (err != paNoError) {
     std::cerr << "Port audio error (at initialisation): "

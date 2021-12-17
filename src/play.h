@@ -2,4 +2,4 @@
 
 #include "Circuit.h"
 
-void play(Circuit &circuit);
+void play(Outlet &output);

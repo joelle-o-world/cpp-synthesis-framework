@@ -24,8 +24,8 @@ public:
   void retrigger() { level = rightLevel = 1.0; }
 
   void process() override {
-    float *halfLife = (float *)inputs[0].buffer->stereo;
-    float *out = (float *)outputs[0].buffer->stereo;
+    float *halfLife = (float *)inputs[0].bufferptr;
+    float *out = (float *)outputs[0].bufferptr;
     for (int i = 0; i < signalChunkSize * 2; i += 2) {
       out[i] = level *= halfLifeToScalar(halfLife[i]);
       out[i + 1] = rightLevel *= halfLifeToScalar(halfLife[i + 1]);

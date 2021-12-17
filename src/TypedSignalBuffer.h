@@ -21,6 +21,9 @@ struct TypedSignalBuffer {
     float *constant;
     MIDIBuffer *midi;
   };
+
+  void *ptr;
 };
 
-void copyData(TypedSignalBuffer *from, StereoBuffer *to);
+// void copyData(TypedSignalBuffer *from, StereoBuffer *to);
+void copyData(float *from, float *to);

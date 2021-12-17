@@ -20,7 +20,7 @@ private:
 public:
   Circuit(AudioProcess *exitNode) : exitNode(exitNode) {}
   Circuit(AudioProcess &exitNode) : exitNode(&exitNode) {}
-  ~Circuit() { deallocateBuffers(); }
+  //~Circuit() { deallocateBuffers(); }
 
   void process() {
     for (AudioProcess *node : firingOrder) {
@@ -31,10 +31,10 @@ public:
 
   void prepare() {
     refreshFiringOrder();
-    allocateBuffers();
+    // allocateBuffers();
   }
 
-  TypedSignalBuffer *exitBuffer() { return exitNode->outputs[0].buffer; }
+  void *exitBuffer() { return exitNode->outputs[0].bufferptr; }
 
 private:
   /**
@@ -58,30 +58,30 @@ private:
     return firingOrder;
   }
 
-  void allocateBuffers() {
-    // TODO: This could be optimised with a buffer pool
-    for (AudioProcess *node : firingOrder) {
-      std::cout << "allocating buffer for " << node->describe() << "\n";
-      for (Outlet &outlet : node->outputs) {
-        outlet.buffer = new TypedSignalBuffer;
-        outlet.buffer->type = Stereo;
-        outlet.buffer->stereo = (StereoBuffer *)(void *)new StereoBuffer;
-        for (Inlet *inlet : outlet.connectedTo)
-          inlet->buffer = outlet.buffer;
-      }
-    }
-  }
+  // void allocateBuffers() {
+  //// TODO: This could be optimised with a buffer pool
+  // for (AudioProcess *node : firingOrder) {
+  // std::cout << "allocating buffer for " << node->describe() << "\n";
+  // for (Outlet &outlet : node->outputs) {
+  // outlet.buffer = new TypedSignalBuffer;
+  // outlet.buffer->type = Stereo;
+  // outlet.buffer->stereo = (StereoBuffer *)(void *)new StereoBuffer;
+  // for (Inlet *inlet : outlet.connectedTo)
+  // inlet->buffer = outlet.buffer;
+  //}
+  //}
+  //}
 
-  void deallocateBuffers() {
-    for (AudioProcess *node : firingOrder)
-      for (Outlet &outlet : node->outputs) {
-        // TODO: delete outlet.buffer->stereo
-        delete outlet.buffer;
-        outlet.buffer = nullptr;
-        for (Inlet *inlet : outlet.connectedTo)
-          inlet->buffer = nullptr;
-      }
-  }
+  // void deallocateBuffers() {
+  // for (AudioProcess *node : firingOrder)
+  // for (Outlet &outlet : node->outputs) {
+  //// TODO: delete outlet.buffer->stereo
+  // delete outlet.buffer;
+  // outlet.buffer = nullptr;
+  // for (Inlet *inlet : outlet.connectedTo)
+  // inlet->buffer = nullptr;
+  //}
+  //}
 
 public:
   void dotGraph(std::ostream &out) {
@@ -105,7 +105,7 @@ public:
 
             out << "  " << jname << " -> " << iname << "\n";
           }
-        } else if (inlet.isConstant && inlet.buffer->type == Constant) {
+        } /*else if (inlet.isConstant && inlet.buffer->type == Constant) {
           auto value = inlet.buffer->constant;
           std::string constantName = "c" + std::to_string(constantCount++);
           out << "  " << constantName << " ";
@@ -114,7 +114,7 @@ public:
           out << "\n";
 
           out << "  " << constantName << " -> " << iname << "\n";
-        }
+        }*/
       }
     }
     out << "}\n";
@@ -140,7 +140,7 @@ public:
 
             out << jname << " --> " << iname << "\n";
           }
-        } else if (inlet.isConstant && inlet.buffer->type == Constant) {
+        } /*else if (inlet.isConstant && inlet.buffer->type == Constant) {
           auto value = inlet.buffer->constant;
           std::string constantName =
               "[ c" + std::to_string(constantCount++) + " ]";
@@ -150,7 +150,7 @@ public:
           out << "\n";
 
           out << constantName << " --> " << iname << "\n";
-        }
+        }*/
       }
     }
   }

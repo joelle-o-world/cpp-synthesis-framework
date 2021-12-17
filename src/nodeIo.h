@@ -17,13 +17,16 @@ class Outlet {
 
 public:
   std::set<Inlet *> connectedTo;
-  TypedSignalBuffer *buffer;
+  void *bufferptr;
   AudioProcess *owner;
+  int deallocationIndex;
+  /// The number of inputs waiting to read this outlet's buffer.
+  int readers;
 };
 
 class Inlet {
 public:
-  TypedSignalBuffer *buffer;
+  void *bufferptr;
   AudioProcess *owner;
   Outlet *connectedTo;
   bool isConstant;

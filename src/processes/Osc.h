@@ -29,8 +29,8 @@ public:
   // a-rate stereo mode
   void process() override {
 
-    float *frequency = (float *)inputs[0].buffer->stereo;
-    float *out = (float *)outputs[0].buffer->stereo;
+    float *frequency = (float *)inputs[0].bufferptr;
+    float *out = (float *)outputs[0].bufferptr;
 
     for (int i = 0; i < signalChunkSize * 2; i += 2) {
       phase += frequency[i] * sampleInterval;

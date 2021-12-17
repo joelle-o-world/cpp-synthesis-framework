@@ -1,5 +1,4 @@
 #include "goBoop.h"
-#include "../connect.h"
 #include <iostream>
 
 void goBoop() {
@@ -17,12 +16,7 @@ void goBoop() {
   connect(envelope.outputs[0], gain.inputs[1]);
   connect(source.outputs[0], gain.inputs[0]);
 
-  envelope.retrigger();
-
   Circuit circuit = Circuit(&gain);
 
-  circuit.prepare();
-  circuit.easyGraph(std::cout);
-
-  play(circuit);
+  play(gain.outputs[0]);
 }
