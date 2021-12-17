@@ -1,4 +1,5 @@
 #include "goBoop.h"
+#include "../connect.h"
 #include <iostream>
 
 void goBoop() {
@@ -6,25 +7,22 @@ void goBoop() {
   initialiseWavetables();
 
   Decay envelope;
-  envelope.inputs[0].connect(.2);
+  connect(.2, envelope.inputs[0]);
 
   Osc source;
-  source.inputs[0].connect(440);
+  connect(440, source.inputs[0]);
   source.waveform = &sineWavetable;
 
   Multiply gain;
-  gain.inputs[0].connect(source.outputs[0]);
-  gain.inputs[1].connect(envelope.outputs[0]);
+  connect(envelope.outputs[0], gain.inputs[1]);
+  connect(source.outputs[0], gain.inputs[0]);
 
   envelope.retrigger();
 
-  
   Circuit circuit = Circuit(&gain);
-
 
   circuit.prepare();
   circuit.easyGraph(std::cout);
 
-  //play(circuit);
-
+  play(circuit);
 }

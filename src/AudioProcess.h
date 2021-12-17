@@ -48,7 +48,7 @@ public:
   /**
    * The function that transforms the audio data. Sub-classes override this.
    */
-  virtual void processStatefully(){
+  virtual void process(){
       // Base class does nothing
   };
 
@@ -63,87 +63,27 @@ public:
   virtual std::string describe() { return "unnamed AudioProcess"; }
 };
 
-class UnaryProcess : public AudioProcess {
+class UnaryOperationProcess : public AudioProcess {
 public:
-  UnaryProcess() : AudioProcess(1, 1) {}
+  UnaryOperationProcess() : AudioProcess(1, 1) {}
 
-  void processStatefully() override {
-    TypedSignalBuffer &in = *(inputs[0].buffer);
-    TypedSignalBuffer &out = *(outputs[0].buffer);
-    if (in.type == Stereo && out.type == Stereo)
-      process(*in.stereo, *out.stereo);
-    else
-      throw "Unexpected signal types";
-  }
-
-  virtual void process(StereoBuffer &in, StereoBuffer &out) {
-    throw "No override defined";
-  }
-};
-
-class UnaryOperationProcess : public UnaryProcess {
 public:
   virtual inline void processSample(float &in, float &out) {
     throw "No override defined";
   }
 
-  void process(StereoBuffer &in, StereoBuffer &out) {
+  void process() {
+    float *in = (float *)inputs[0].buffer->stereo;
+    float *out = (float *)outputs[0].buffer->stereo;
+
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(out[i], in[i]);
   }
 };
 
-class BinaryProcess : public AudioProcess {
+class BinaryOperationProcess : public AudioProcess {
 public:
-  BinaryProcess() : AudioProcess(2, 1) {}
-
-  void processStatefully() override {
-
-    TypedSignalBuffer &a = *(inputs[0].buffer);
-    TypedSignalBuffer &b = *inputs[1].buffer;
-    TypedSignalBuffer &out = *outputs[0].buffer;
-
-    if (out.type == Stereo) {
-      if (a.type == Stereo && b.type == Stereo)
-        process(*a.stereo, *b.stereo, *out.stereo);
-
-      else if (a.type == Stereo && b.type == Constant)
-        process(*a.stereo, *b.constant, *out.stereo);
-
-      else if (a.type == Constant && b.type == Stereo)
-        process(*a.constant, *b.stereo, *out.stereo);
-
-      else if (a.type == Constant && b.type == Constant)
-        process(*a.constant, *b.constant, *out.stereo);
-
-      else
-        throw "unexpected input signal types";
-
-    } else
-      throw "output must be stereo";
-  }
-
-  // Two a-rate signals
-  virtual void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) {
-    throw "No override defined";
-  }
-
-  // a is a-rate, b is k-rate
-  virtual void process(StereoBuffer &a, float b, StereoBuffer &out) {
-    throw "No override defined";
-  }
-
-  // a is k-rate, b is a-rate
-  virtual void process(float a, StereoBuffer &b, StereoBuffer &out) {
-    throw "No override defined";
-  }
-
-  // two k-rate signals
-  virtual void process(float a, float b, StereoBuffer &out) {
-    throw "No override difined";
-  }
-};
-class BinaryOperationProcess : public BinaryProcess {
+  BinaryOperationProcess() : AudioProcess(2, 1) {}
 
 private:
   virtual inline void processSample(float &a, float &b, float &out) {
@@ -152,26 +92,11 @@ private:
 
 public:
   // Two a-rate signals
-  void process(StereoBuffer &a, StereoBuffer &b, StereoBuffer &out) override {
+  void process() override {
+    float *a = (float *)inputs[0].buffer->stereo;
+    float *b = (float *)inputs[1].buffer->stereo;
+    float *out = (float *)outputs[0].buffer->stereo;
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(a[i], b[i], out[i]);
-  }
-
-  // a is a-rate, b is k-rate
-  void process(StereoBuffer &a, float b, StereoBuffer &out) override {
-    for (int i = 0; i < signalChunkSize * 2; ++i)
-      processSample(a[i], b, out[i]);
-  }
-
-  // a is k-rate, b is a-rate
-  void process(float a, StereoBuffer &b, StereoBuffer &out) override {
-    for (int i = 0; i < signalChunkSize * 2; ++i)
-      processSample(a, b[i], out[i]);
-  }
-
-  // two k-rate signals
-  void process(float a, float b, StereoBuffer &out) override {
-    for (int i = 0; i < signalChunkSize * 2; ++i)
-      processSample(a, b, out[i]);
   }
 };

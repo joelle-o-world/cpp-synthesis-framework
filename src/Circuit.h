@@ -23,8 +23,10 @@ public:
   ~Circuit() { deallocateBuffers(); }
 
   void process() {
-    for (AudioProcess *node : firingOrder)
-      node->processStatefully();
+    for (AudioProcess *node : firingOrder) {
+      std::cout << "Firing " << node->describe() << "\n";
+      node->process();
+    }
   }
 
   void prepare() {
@@ -58,7 +60,8 @@ private:
 
   void allocateBuffers() {
     // TODO: This could be optimised with a buffer pool
-    for (AudioProcess *node : firingOrder)
+    for (AudioProcess *node : firingOrder) {
+      std::cout << "allocating buffer for " << node->describe() << "\n";
       for (Outlet &outlet : node->outputs) {
         outlet.buffer = new TypedSignalBuffer;
         outlet.buffer->type = Stereo;
@@ -66,6 +69,7 @@ private:
         for (Inlet *inlet : outlet.connectedTo)
           inlet->buffer = outlet.buffer;
       }
+    }
   }
 
   void deallocateBuffers() {
