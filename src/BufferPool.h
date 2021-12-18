@@ -11,6 +11,7 @@ template <typename T, int size> class BufferPool {
 public:
   T *allocate(int &n) {
     if (busy == a.size()) {
+      std::cout << "Creating a new buffer.\n";
       T *newbuf = new T[size];
       a.push_back(newbuf);
     }
@@ -22,9 +23,13 @@ public:
   }
 
   void release(int n) {
-    auto tmp = a[--busy];
+    std::cout << "releasing " << n << ", there are now " << busy
+              << " busy buffers\n";
+    --busy;
+    auto tmp = a[busy];
     a[busy] = a[n];
     a[n] = tmp;
     // swap(a[n], a[--busy]);
+    std::cout << "finished releasing\n";
   }
 };

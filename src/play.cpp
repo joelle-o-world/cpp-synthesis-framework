@@ -35,6 +35,7 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
   data->output->owner->fire();
 
   copyData((float *)data->output->bufferptr, out);
+  AudioProcess::bufferPool.release(data->output->deallocationIndex);
 
   return 0;
 }

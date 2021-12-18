@@ -30,9 +30,9 @@ typedef enum { triggered, done } TriggerState;
  * AudioProcessCoordinator subclasses.
  */
 class AudioProcess {
-  static BufferPool<float, 4096> bufferPool;
 
 public:
+  static BufferPool<float, 4096> bufferPool;
   const unsigned char numberOfInputs;
   const unsigned char numberOfOutputs;
   TriggerState triggerState;
@@ -76,11 +76,12 @@ public:
       process();
       std::cout << "Processed: " << describe() << "\n";
       for (Inlet &inlet : inputs) {
-        if (--inlet.connectedTo->readers == 0) {
+        if (--(inlet.connectedTo->readers) == 0) {
           std::cout << "Deallocating\n";
           bufferPool.release(inlet.connectedTo->deallocationIndex);
         }
       }
+      std::cout << "Finished deallocations.\n";
 
       triggerState = done;
     }
