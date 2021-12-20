@@ -2,14 +2,14 @@
 
 #include <math.h>
 
-#include "../AudioProcess.h"
+#include "UnaryOperation.h"
 
-class FTM : public UnaryOperationProcess {
+class FTM : public UnaryOperation {
   void processSample(float &in, float &out) override {
     out = 440.0 * pow(2.0, (in - 69.0) / 12.0);
   }
 };
 
-class SemitoneToRatio : public UnaryOperationProcess {
+class SemitoneToRatio : public UnaryOperation {
   void processSample(float &in, float &out) { out = pow(2.0, in / 12.0); }
 };
