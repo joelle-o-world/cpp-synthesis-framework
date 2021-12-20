@@ -10,20 +10,5 @@ typedef float MonoConstant;
 typedef float StereoConstant;
 typedef void *MIDIBuffer; // TODO: Future
 
-enum SignalType : unsigned char { Stereo = 1, Mono, Constant, MIDIData };
-
-struct TypedSignalBuffer {
-  SignalType type;
-
-  union {
-    StereoBuffer *stereo;
-    MonoBuffer *mono;
-    float *constant;
-    MIDIBuffer *midi;
-  };
-
-  void *ptr;
-};
-
 // void copyData(TypedSignalBuffer *from, StereoBuffer *to);
 void copyData(float *from, float *to);

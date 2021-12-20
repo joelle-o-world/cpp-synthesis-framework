@@ -54,7 +54,6 @@ public:
   }
 
   void fire() {
-    std::cout << describe() << ".fire()\n";
     if (triggerState == triggered) {
       return;
     } else {
@@ -62,26 +61,19 @@ public:
       for (Inlet &input : inputs)
         input.connectedTo->owner->fire();
 
-      std::cout << "\nallocating outlet buffers for " << describe() << "\n";
       for (Outlet &outlet : outputs) {
-        std::cout << "allocating..\n";
         // outlet.buffer->stereo = nullptr;
         outlet.bufferptr = bufferPool.allocate(outlet.deallocationIndex);
-        std::cout << "Allocated\n";
         for (Inlet *inlet : outlet.connectedTo)
           inlet->bufferptr = outlet.bufferptr;
         outlet.readers = outlet.connectedTo.size();
       }
-      std::cout << "about to process " << describe() << "\n";
       process();
-      std::cout << "Processed: " << describe() << "\n";
       for (Inlet &inlet : inputs) {
         if (--(inlet.connectedTo->readers) == 0) {
-          std::cout << "Deallocating\n";
           bufferPool.release(inlet.connectedTo->deallocationIndex);
         }
       }
-      std::cout << "Finished deallocations.\n";
 
       triggerState = done;
     }
