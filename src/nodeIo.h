@@ -22,6 +22,10 @@ public:
   int deallocationIndex;
   /// The number of inputs waiting to read this outlet's buffer.
   int readers;
+  Outlet() {
+    readers = 0;
+    deallocationIndex = -1;
+  }
 };
 
 class Inlet {
