@@ -6,7 +6,7 @@
 class Constant : public AudioProcess {
 public:
   float value;
-  Constant(float value) : AudioProcess(0, 1), value(value) {}
+  Constant(float value) : AudioProcess({}, {stereo}), value(value) {}
 
   void process() override {
     float *out = (float *)outputs[0].bufferptr;

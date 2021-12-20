@@ -40,17 +40,22 @@ public:
   std::vector<Inlet> inputs;
   std::vector<Outlet> outputs;
 
-  AudioProcess(unsigned char numberInputs, unsigned char numberOfOutputs)
-      : numberOfInputs(numberInputs), numberOfOutputs(numberOfOutputs),
+  AudioProcess(std::vector<signalType> inputTypes,
+               std::vector<signalType> outputTypes)
+      : numberOfInputs(inputTypes.size()), numberOfOutputs(outputTypes.size()),
         triggerState(done) {
 
-    // TODO: this looks a bit cryptic, sort it out
+    // Initialise the inlets
     inputs.resize(numberOfInputs);
     outputs.resize(numberOfOutputs);
-    for (int i = 0; i < numberInputs; ++i)
+    for (int i = 0; i < numberOfInputs; ++i) {
+      inputs[i].signalType = inputTypes[i];
       inputs[i].owner = this;
-    for (int i = 0; i < numberOfOutputs; ++i)
+    }
+    for (int i = 0; i < numberOfOutputs; ++i) {
+      outputs[i].signalType = outputTypes[i];
       outputs[i].owner = this;
+    }
   }
 
   void fire() {
@@ -99,7 +104,7 @@ public:
 
 class UnaryOperationProcess : public AudioProcess {
 public:
-  UnaryOperationProcess() : AudioProcess(1, 1) {}
+  UnaryOperationProcess() : AudioProcess({stereo}, {stereo}) {}
 
 public:
   virtual inline void processSample(float &in, float &out) {
@@ -117,7 +122,7 @@ public:
 
 class BinaryOperationProcess : public AudioProcess {
 public:
-  BinaryOperationProcess() : AudioProcess(2, 1) {}
+  BinaryOperationProcess() : AudioProcess({stereo, stereo}, {stereo}) {}
 
 private:
   virtual inline void processSample(float &a, float &b, float &out) {

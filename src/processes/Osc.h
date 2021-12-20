@@ -24,7 +24,7 @@ public:
     rightPhase = r;
   }
 
-  Osc() : AudioProcess(1, 1) {}
+  Osc() : AudioProcess({stereo}, {stereo}) {}
 
   // a-rate stereo mode
   void process() override {

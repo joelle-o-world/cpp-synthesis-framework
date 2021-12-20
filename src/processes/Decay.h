@@ -18,7 +18,7 @@ class Decay : public AudioProcess {
   };
 
 public:
-  Decay() : AudioProcess(1, 1) { retrigger(); }
+  Decay() : AudioProcess({stereo}, {stereo}) { retrigger(); }
   std::string describe() override { return "Decay"; }
 
   void retrigger() { level = rightLevel = 1.0; }
