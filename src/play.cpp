@@ -40,7 +40,7 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
   return 0;
 }
 
-int play(Outlet &outlet) {
+int play(Outlet &outlet, float duration = 5) {
   // circuit.prepare();
   data = {&outlet};
   PaError err = Pa_Initialize();
@@ -83,7 +83,7 @@ int play(Outlet &outlet) {
     return 1;
   }
 
-  Pa_Sleep(5000);
+  Pa_Sleep(1000 * duration);
 
   std::cout << "done!\n";
   err = Pa_StopStream(stream);
@@ -102,4 +102,4 @@ int play(Outlet &outlet) {
   return 0;
 }
 
-void play(AudioProcess &p) { play(p.outputs[0]); }
+void play(AudioProcess &p, float duration = 5) { play(p.outputs[0], duration); }
