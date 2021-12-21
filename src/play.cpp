@@ -101,3 +101,5 @@ int play(Outlet &outlet) {
 
   return 0;
 }
+
+void play(AudioProcess &p) { play(p.outputs[0]); }

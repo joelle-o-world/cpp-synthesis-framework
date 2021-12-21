@@ -1,5 +1,6 @@
 #pragma once
 #include "../AudioProcess.h"
+#include "../connect.h"
 #include "../wavetables.h"
 #include <iostream>
 #include <string>

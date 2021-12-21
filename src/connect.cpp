@@ -1,5 +1,4 @@
 #include "connect.h"
-#include "processes/Constant.h"
 
 void connect(Outlet &outlet, Inlet &inlet) {
   disconnect(inlet);
@@ -9,11 +8,6 @@ void connect(Outlet &outlet, Inlet &inlet) {
 
 void connect(AudioProcess &from, Inlet &into) {
   connect(from.outputs[0], into);
-}
-
-void connect(float k, Inlet &inlet) {
-  auto c = new class Constant(k);
-  connect(*c, inlet);
 }
 
 void disconnect(Inlet &inlet) {

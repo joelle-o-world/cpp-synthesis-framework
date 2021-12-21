@@ -1,9 +1,6 @@
 #pragma once
 
-#include "../AudioProcess.h"
-#include "../Circuit.h"
-#include "../connect.h"
 #include "../play.h"
-#include "../processes.h"
+#include "../shorthands.h"
 
 void goBoop();
