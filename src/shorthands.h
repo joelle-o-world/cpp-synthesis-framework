@@ -10,3 +10,8 @@ Multiply &multiply(AudioProcess &a, AudioProcess &b);
 Multiply &operator*(AudioProcess &a, AudioProcess &b);
 Add &add(AudioProcess &a, AudioProcess &b);
 Add &operator+(AudioProcess &a, AudioProcess &b);
+float st(float semitones);
+SemitoneToRatio &st(AudioProcess &semitones);
+
+float pitch(float midiPitch);
+MTF &pitch(AudioProcess &midiPitch);

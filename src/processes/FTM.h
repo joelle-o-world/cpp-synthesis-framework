@@ -4,7 +4,7 @@
 
 #include "UnaryOperation.h"
 
-class FTM : public UnaryOperation {
+class MTF : public UnaryOperation {
   void processSample(float &in, float &out) override {
     out = 440.0 * pow(2.0, (in - 69.0) / 12.0);
   }
