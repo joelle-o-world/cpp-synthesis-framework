@@ -1,0 +1,4 @@
+file bin/play
+b malloc_error_break
+run
+bt
