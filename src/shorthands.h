@@ -15,3 +15,5 @@ SemitoneToRatio &st(AudioProcess &semitones);
 
 float pitch(float midiPitch);
 MTF &pitch(AudioProcess &midiPitch);
+Multiply &multiply(AudioProcess &a, float b);
+Multiply &operator*(AudioProcess &a, float b);
