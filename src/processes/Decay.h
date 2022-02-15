@@ -40,3 +40,6 @@ private:
   float *HALFLIFE() { return (float *)halfLife().bufferptr; }
   float *OUT() { return (float *)out().bufferptr; }
 };
+
+Decay &decay(float halfLife);
+Decay &decay(AudioProcess &halfLife);

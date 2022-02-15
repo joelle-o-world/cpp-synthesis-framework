@@ -1,4 +1,5 @@
 #include "connect.h"
+#include "processes/Constant.h"
 
 void connect(Outlet &outlet, Inlet &inlet) {
   disconnect(inlet);
@@ -15,4 +16,9 @@ void disconnect(Inlet &inlet) {
   if (inlet.connectedTo)
     inlet.connectedTo->connectedTo.erase(&inlet);
   inlet.connectedTo = nullptr;
+}
+
+void connect(float k, Inlet &inlet) {
+  auto c = new Constant(k);
+  connect(*c, inlet);
 }

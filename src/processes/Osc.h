@@ -64,3 +64,6 @@ private:
   float *FREQUENCY() { return (float *)frequency().bufferptr; }
   float *OUT() { return (float *)out().bufferptr; }
 };
+
+Osc &osc(float frequency);
+Osc &osc(AudioProcess &frequency);

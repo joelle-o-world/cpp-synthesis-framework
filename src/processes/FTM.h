@@ -13,3 +13,9 @@ class MTF : public UnaryOperation {
 class SemitoneToRatio : public UnaryOperation {
   void processSample(float &in, float &out) { out = pow(2.0, in / 12.0); }
 };
+
+float st(float semitones);
+SemitoneToRatio &st(AudioProcess &semitones);
+
+float pitch(float midiPitch);
+MTF &pitch(AudioProcess &midiPitch);

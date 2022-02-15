@@ -15,6 +15,9 @@ private:
     out = a + b;
   }
 };
+// TODO: More addition overloads
+Add &add(AudioProcess &a, AudioProcess &b);
+Add &operator+(AudioProcess &a, AudioProcess &b);
 
 class Subtract : public BinaryOperation {
 private:
@@ -38,6 +41,10 @@ public:
     out = a * b;
   }
 };
+Multiply &multiply(AudioProcess &a, float b);
+Multiply &operator*(AudioProcess &a, float b);
+Multiply &multiply(AudioProcess &a, AudioProcess &b);
+Multiply &operator*(AudioProcess &a, AudioProcess &b);
 
 class Divide : public BinaryOperation {
 private:
