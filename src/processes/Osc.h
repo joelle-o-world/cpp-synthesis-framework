@@ -13,7 +13,6 @@ class Osc : public AudioProcess {
   float rightPhase = 0;
 
 public:
-  float frequency = 440;
   Wavetable *waveform;
 
   void setPhase(float l) { phase = rightPhase = l; }
@@ -30,7 +29,7 @@ public:
   // a-rate stereo mode
   void process() override {
 
-    float *frequency = (float *)inputs[0].bufferptr;
+    float *frequency = FREQUENCY();
     float *out = (float *)outputs[0].bufferptr;
 
     for (int i = 0; i < signalChunkSize * 2; i += 2) {
@@ -56,5 +55,12 @@ public:
     }
   }
 
+public:
   std::string describe() override { return "Osc"; }
+  Inlet &frequency() { return inputs[0]; }
+  Outlet &out() { return outputs[0]; }
+
+private:
+  float *FREQUENCY() { return (float *)frequency().bufferptr; }
+  float *OUT() { return (float *)out().bufferptr; }
 };

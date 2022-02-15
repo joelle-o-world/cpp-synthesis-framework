@@ -10,6 +10,7 @@ const float logHalf = log(.5);
 // RecursiveMultiplier
 
 class Decay : public AudioProcess {
+  // internal state
   float level;
   float rightLevel;
 
@@ -24,11 +25,18 @@ public:
   void retrigger() { level = rightLevel = 1.0; }
 
   void process() override {
-    float *halfLife = (float *)inputs[0].bufferptr;
-    float *out = (float *)outputs[0].bufferptr;
+    float *halfLife = HALFLIFE();
+    float *out = OUT();
     for (int i = 0; i < signalChunkSize * 2; i += 2) {
       out[i] = level *= halfLifeToScalar(halfLife[i]);
       out[i + 1] = rightLevel *= halfLifeToScalar(halfLife[i + 1]);
     }
   }
+
+  Inlet &halfLife() { return inputs[0]; }
+  Outlet &out() { return outputs[0]; }
+
+private:
+  float *HALFLIFE() { return (float *)halfLife().bufferptr; }
+  float *OUT() { return (float *)out().bufferptr; }
 };

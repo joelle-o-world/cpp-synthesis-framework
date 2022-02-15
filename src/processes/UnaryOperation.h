@@ -17,4 +17,12 @@ public:
     for (int i = 0; i < signalChunkSize * 2; ++i)
       processSample(out[i], in[i]);
   }
+
+public:
+  Inlet &in() { return inputs[0]; }
+  Outlet &out() { return outputs[0]; }
+
+private:
+  float *IN() { return (float *)in().bufferptr; }
+  float *OUT() { return (float *)out().bufferptr; }
 };
