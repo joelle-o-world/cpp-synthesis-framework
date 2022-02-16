@@ -7,7 +7,6 @@
 #include "Circuit.h"
 #include "TypedSignalBuffer.h"
 #include "processes/Osc.h"
-#include "processes/arithmetic.h"
 #include "wavetables.h"
 
 #define SAMPLE_RATE (44100)
