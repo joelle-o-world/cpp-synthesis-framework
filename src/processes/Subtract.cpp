@@ -18,31 +18,31 @@ Subtract &subtract(AudioProcess &a, float b) {
   connect(b, p->b());
   return *p;
 };
-Subtract &subtract(Writer &a, AudioProcess &b) {
+Subtract &subtract(UntypedWriter &a, AudioProcess &b) {
   Subtract *p = new Subtract();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Subtract &subtract(AudioProcess &a, Writer &b) {
+Subtract &subtract(AudioProcess &a, UntypedWriter &b) {
   Subtract *p = new Subtract();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Subtract &subtract(Writer &a, Writer &b) {
+Subtract &subtract(UntypedWriter &a, UntypedWriter &b) {
   Subtract *p = new Subtract();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Subtract &subtract(float a, Writer &b) {
+Subtract &subtract(float a, UntypedWriter &b) {
   Subtract *p = new Subtract();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Subtract &subtract(Writer &a, float b) {
+Subtract &subtract(UntypedWriter &a, float b) {
   Subtract *p = new Subtract();
   connect(a, p->a());
   connect(b, p->b());
@@ -52,8 +52,14 @@ Subtract &subtract(Writer &a, float b) {
 Subtract &operator-(AudioProcess &a, AudioProcess &b) { return subtract(a, b); }
 Subtract &operator-(float a, AudioProcess &b) { return subtract(a, b); };
 Subtract &operator-(AudioProcess &a, float b) { return subtract(a, b); };
-Subtract &operator-(Writer &a, AudioProcess &b) { return subtract(a, b); };
-Subtract &operator-(AudioProcess &a, Writer &b) { return subtract(a, b); };
-Subtract &operator-(Writer &a, Writer &b) { return subtract(a, b); };
-Subtract &operator-(float a, Writer &b) { return subtract(a, b); };
-Subtract &operator-(Writer &a, float b) { return subtract(a, b); };
+Subtract &operator-(UntypedWriter &a, AudioProcess &b) {
+  return subtract(a, b);
+};
+Subtract &operator-(AudioProcess &a, UntypedWriter &b) {
+  return subtract(a, b);
+};
+Subtract &operator-(UntypedWriter &a, UntypedWriter &b) {
+  return subtract(a, b);
+};
+Subtract &operator-(float a, UntypedWriter &b) { return subtract(a, b); };
+Subtract &operator-(UntypedWriter &a, float b) { return subtract(a, b); };

@@ -20,31 +20,31 @@ Multiply &multiply(AudioProcess &a, float b) {
   connect(b, p->b());
   return *p;
 };
-Multiply &multiply(Writer &a, AudioProcess &b) {
+Multiply &multiply(UntypedWriter &a, AudioProcess &b) {
   Multiply *p = new Multiply();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Multiply &multiply(AudioProcess &a, Writer &b) {
+Multiply &multiply(AudioProcess &a, UntypedWriter &b) {
   Multiply *p = new Multiply();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Multiply &multiply(Writer &a, Writer &b) {
+Multiply &multiply(UntypedWriter &a, UntypedWriter &b) {
   Multiply *p = new Multiply();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Multiply &multiply(float a, Writer &b) {
+Multiply &multiply(float a, UntypedWriter &b) {
   Multiply *p = new Multiply();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Multiply &multiply(Writer &a, float b) {
+Multiply &multiply(UntypedWriter &a, float b) {
   Multiply *p = new Multiply();
   connect(a, p->a());
   connect(b, p->b());
@@ -54,8 +54,14 @@ Multiply &multiply(Writer &a, float b) {
 Multiply &operator*(AudioProcess &a, AudioProcess &b) { return multiply(a, b); }
 Multiply &operator*(float a, AudioProcess &b) { return multiply(a, b); };
 Multiply &operator*(AudioProcess &a, float b) { return multiply(a, b); };
-Multiply &operator*(Writer &a, AudioProcess &b) { return multiply(a, b); };
-Multiply &operator*(AudioProcess &a, Writer &b) { return multiply(a, b); };
-Multiply &operator*(Writer &a, Writer &b) { return multiply(a, b); };
-Multiply &operator*(float a, Writer &b) { return multiply(a, b); };
-Multiply &operator*(Writer &a, float b) { return multiply(a, b); };
+Multiply &operator*(UntypedWriter &a, AudioProcess &b) {
+  return multiply(a, b);
+};
+Multiply &operator*(AudioProcess &a, UntypedWriter &b) {
+  return multiply(a, b);
+};
+Multiply &operator*(UntypedWriter &a, UntypedWriter &b) {
+  return multiply(a, b);
+};
+Multiply &operator*(float a, UntypedWriter &b) { return multiply(a, b); };
+Multiply &operator*(UntypedWriter &a, float b) { return multiply(a, b); };

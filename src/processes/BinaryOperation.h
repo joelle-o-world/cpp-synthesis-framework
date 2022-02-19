@@ -13,19 +13,16 @@ private:
 public:
   // Two a-rate signals
   void process() override {
-    float *a = A();
-    float *b = B();
-    float *out = OUT();
+    auto A = a().data();
+    auto B = b().data();
+    auto OUT = out().data();
     for (int i = 0; i < signalChunkSize * 2; ++i)
-      processSample(a[i], b[i], out[i]);
+      processSample(A[i], B[i], OUT[i]);
   }
 
-  inline Reader &a() { return inputs[0]; }
-  inline Reader &b() { return inputs[1]; }
-  inline Writer &out() { return outputs[0]; }
-
-private:
-  inline float *A() { return (float *)a().bufferptr; }
-  inline float *B() { return (float *)b().bufferptr; }
-  inline float *OUT() { return (float *)out().bufferptr; }
+  inline Reader<StereoBuffer> &a() { return (Reader<StereoBuffer> &)inputs[0]; }
+  inline Reader<StereoBuffer> &b() { return (Reader<StereoBuffer> &)inputs[1]; }
+  inline Writer<StereoBuffer> &out() {
+    return (Writer<StereoBuffer> &)outputs[0];
+  }
 };

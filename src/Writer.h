@@ -6,20 +6,27 @@
 
 class AudioProcess;
 
-class Writer {
-  friend Reader;
+class UntypedWriter {
+  friend UntypedReader;
 
 public:
-  std::set<Reader *> connectedTo;
+  std::set<UntypedReader *> connectedTo;
   void *bufferptr;
   AudioProcess *owner;
   int deallocationIndex;
   signalType signalType;
   /// The number of inputs waiting to read this outlet's buffer.
   int readers;
-  Writer() {
+  UntypedWriter() {
     readers = 0;
     deallocationIndex = -1;
     signalType = nodata;
   }
+};
+
+template <typename T> class Writer : public UntypedWriter {
+public:
+  T &data() { return *(T *)bufferptr; }
+
+  int chunkSize() { return sizeof(T); }
 };

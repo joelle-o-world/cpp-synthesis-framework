@@ -38,8 +38,8 @@ public:
   const unsigned char numberOfOutputs;
   TriggerState triggerState;
 
-  std::vector<Reader> inputs;
-  std::vector<Writer> outputs;
+  std::vector<UntypedReader> inputs;
+  std::vector<UntypedWriter> outputs;
 
   AudioProcess(std::vector<signalType> inputTypes,
                std::vector<signalType> outputTypes);
@@ -49,18 +49,18 @@ public:
       return;
     } else {
       triggerState = triggered;
-      for (Reader &input : inputs)
+      for (UntypedReader &input : inputs)
         input.connectedTo->owner->fire();
 
-      for (Writer &outlet : outputs) {
+      for (UntypedWriter &outlet : outputs) {
         // outlet.buffer->stereo = nullptr;
         outlet.bufferptr = bufferPool.allocate(outlet.deallocationIndex);
-        for (Reader *inlet : outlet.connectedTo)
+        for (UntypedReader *inlet : outlet.connectedTo)
           inlet->bufferptr = outlet.bufferptr;
         outlet.readers = outlet.connectedTo.size();
       }
       process();
-      for (Reader &inlet : inputs) {
+      for (UntypedReader &inlet : inputs) {
         if (--(inlet.connectedTo->readers) == 0) {
           bufferPool.release(inlet.connectedTo->deallocationIndex);
         }
@@ -79,7 +79,7 @@ public:
 
   std::set<AudioProcess *> *dependencies() {
     std::set<AudioProcess *> *set = new std::set<AudioProcess *>;
-    for (Reader &inlet : inputs)
+    for (UntypedReader &inlet : inputs)
       if (inlet.connectedTo)
         set->insert(inlet.connectedTo->owner);
     return set;

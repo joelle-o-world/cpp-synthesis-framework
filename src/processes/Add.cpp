@@ -21,31 +21,31 @@ Add &add(AudioProcess &a, float b) {
   connect(b, p->b());
   return *p;
 };
-Add &add(Writer &a, AudioProcess &b) {
+Add &add(UntypedWriter &a, AudioProcess &b) {
   Add *p = new Add();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Add &add(AudioProcess &a, Writer &b) {
+Add &add(AudioProcess &a, UntypedWriter &b) {
   Add *p = new Add();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Add &add(Writer &a, Writer &b) {
+Add &add(UntypedWriter &a, UntypedWriter &b) {
   Add *p = new Add();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Add &add(float a, Writer &b) {
+Add &add(float a, UntypedWriter &b) {
   Add *p = new Add();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Add &add(Writer &a, float b) {
+Add &add(UntypedWriter &a, float b) {
   Add *p = new Add();
   connect(a, p->a());
   connect(b, p->b());
@@ -55,8 +55,8 @@ Add &add(Writer &a, float b) {
 Add &operator+(AudioProcess &a, AudioProcess &b) { return add(a, b); }
 Add &operator+(float a, AudioProcess &b) { return add(a, b); };
 Add &operator+(AudioProcess &a, float b) { return add(a, b); };
-Add &operator+(Writer &a, AudioProcess &b) { return add(a, b); };
-Add &operator+(AudioProcess &a, Writer &b) { return add(a, b); };
-Add &operator+(Writer &a, Writer &b) { return add(a, b); };
-Add &operator+(float a, Writer &b) { return add(a, b); };
-Add &operator+(Writer &a, float b) { return add(a, b); };
+Add &operator+(UntypedWriter &a, AudioProcess &b) { return add(a, b); };
+Add &operator+(AudioProcess &a, UntypedWriter &b) { return add(a, b); };
+Add &operator+(UntypedWriter &a, UntypedWriter &b) { return add(a, b); };
+Add &operator+(float a, UntypedWriter &b) { return add(a, b); };
+Add &operator+(UntypedWriter &a, float b) { return add(a, b); };

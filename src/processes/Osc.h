@@ -29,11 +29,11 @@ public:
   // a-rate stereo mode
   void process() override {
 
-    float *frequency = FREQUENCY();
+    auto f = frequency().data();
     float *out = (float *)outputs[0].bufferptr;
 
     for (int i = 0; i < signalChunkSize * 2; i += 2) {
-      phase += frequency[i] * sampleInterval;
+      phase += f[i] * sampleInterval;
       while (phase > 1)
         --phase;
       while (phase < 0)
@@ -44,7 +44,7 @@ public:
       out[i + 1] = out[i];
     }
     for (int i = 1; i < signalChunkSize * 2; i += 2) {
-      rightPhase += frequency[i] * sampleInterval;
+      rightPhase += f[i] * sampleInterval;
       while (rightPhase > 1)
         --rightPhase;
       while (rightPhase < 0)
@@ -57,12 +57,10 @@ public:
 
 public:
   std::string describe() override { return "Osc"; }
-  Reader &frequency() { return inputs[0]; }
-  Writer &out() { return outputs[0]; }
-
-private:
-  float *FREQUENCY() { return (float *)frequency().bufferptr; }
-  float *OUT() { return (float *)out().bufferptr; }
+  Reader<StereoBuffer> &frequency() {
+    return (Reader<StereoBuffer> &)inputs[0];
+  }
+  Writer<StereoBuffer> &out() { return (Writer<StereoBuffer> &)outputs[0]; }
 };
 
 Osc &osc(float frequency);

@@ -4,8 +4,8 @@
 #include "Reader.h"
 #include "Writer.h"
 
-void connect(Writer &from, Reader &into);
-void connect(AudioProcess &from, Reader &into);
+void connect(UntypedWriter &from, UntypedReader &into);
+void connect(AudioProcess &from, UntypedReader &into);
 
-void disconnect(Reader &inlet);
-void connect(float constant, Reader &inlet);
+void disconnect(UntypedReader &inlet);
+void connect(float constant, UntypedReader &inlet);

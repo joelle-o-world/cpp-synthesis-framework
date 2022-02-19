@@ -2,21 +2,26 @@
 
 #include "signalType.h"
 
-class Writer;
+class UntypedWriter;
 class AudioProcess;
 
-class Reader {
+class UntypedReader {
 public:
   void *bufferptr;
   AudioProcess *owner;
-  Writer *connectedTo;
+  UntypedWriter *connectedTo;
   bool isConstant;
   signalType signalType;
 
-  Reader() {
+  UntypedReader() {
     connectedTo = nullptr;
     owner = nullptr;
     isConstant = false;
     signalType = nodata;
   }
+};
+
+template <typename BufferType> class Reader : public UntypedReader {
+public:
+  BufferType &data() { return *(BufferType *)bufferptr; }
 };

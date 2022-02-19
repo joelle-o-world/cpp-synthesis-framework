@@ -9,16 +9,13 @@ public:
   Constant(float value) : AudioProcess({}, {stereo}), value(value) {}
 
   void process() override {
-    float *out = OUT();
+    auto OUT = out().data();
     for (int i = 0; i < signalChunkSize * 2; ++i) {
-      out[i] = value;
+      OUT[i] = value;
     }
   }
 
-  Writer &out() { return outputs[0]; }
+  Writer<StereoBuffer> &out() { return (Writer<StereoBuffer> &)outputs[0]; }
 
   std::string describe() override { return std::to_string(value); }
-
-private:
-  float *OUT() { return (float *)out().bufferptr; }
 };

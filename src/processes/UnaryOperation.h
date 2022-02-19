@@ -11,18 +11,14 @@ public:
   }
 
   void process() {
-    float *in = (float *)inputs[0].bufferptr;
-    float *out = (float *)outputs[0].bufferptr;
+    auto IN = in().data();
+    float *OUT = out().data();
 
     for (int i = 0; i < signalChunkSize * 2; ++i)
-      processSample(out[i], in[i]);
+      processSample(OUT[i], IN[i]);
   }
 
 public:
-  Reader &in() { return inputs[0]; }
-  Writer &out() { return outputs[0]; }
-
-private:
-  float *IN() { return (float *)in().bufferptr; }
-  float *OUT() { return (float *)out().bufferptr; }
+  Reader<StereoBuffer> &in() { return (Reader<StereoBuffer> &)inputs[0]; }
+  Writer<StereoBuffer> &out() { return (Writer<StereoBuffer> &)outputs[0]; }
 };

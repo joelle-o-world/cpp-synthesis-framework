@@ -25,20 +25,16 @@ public:
   void retrigger() { level = rightLevel = 1.0; }
 
   void process() override {
-    float *halfLife = HALFLIFE();
-    float *out = OUT();
+    auto HALFLIFE = HalfLife().data();
+    float *out = Out().data();
     for (int i = 0; i < signalChunkSize * 2; i += 2) {
-      out[i] = level *= halfLifeToScalar(halfLife[i]);
-      out[i + 1] = rightLevel *= halfLifeToScalar(halfLife[i + 1]);
+      out[i] = level *= halfLifeToScalar(HALFLIFE[i]);
+      out[i + 1] = rightLevel *= halfLifeToScalar(HALFLIFE[i + 1]);
     }
   }
 
-  Reader &halfLife() { return inputs[0]; }
-  Writer &out() { return outputs[0]; }
-
-private:
-  float *HALFLIFE() { return (float *)halfLife().bufferptr; }
-  float *OUT() { return (float *)out().bufferptr; }
+  Reader<StereoBuffer> &HalfLife() { return (Reader<StereoBuffer> &)inputs[0]; }
+  Writer<StereoBuffer> &Out() { return (Writer<StereoBuffer> &)outputs[0]; }
 };
 
 Decay &decay(float halfLife);
