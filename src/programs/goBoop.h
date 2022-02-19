@@ -1,6 +1,6 @@
 #pragma once
 
+#include "../components.h"
 #include "../play.h"
-#include "../processes.h"
 
 void goBoop();

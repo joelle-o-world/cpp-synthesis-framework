@@ -1,5 +1,5 @@
 #include "connect.h"
-#include "processes/Constant.h"
+#include "components/Constant.h"
 
 void connect(UntypedWriter &outlet, UntypedReader &inlet) {
   disconnect(inlet);

@@ -1,15 +1,13 @@
 
 #include <iostream>
-#include <portaudio.h>
 #include <math.h>
+#include <portaudio.h>
 
-#include "../processes/Osc.h"
-#include "../wavetables.h"
 #include "../AudioProcess.h"
-#include "../processes/arithmetic.h"
+#include "../components.h"
+#include "../wavetables.h"
 
 #define SAMPLE_RATE (44100)
-
 
 typedef struct {
   float left_phase;
@@ -24,7 +22,6 @@ Multiply gain;
 float f = 100;
 float clipamount = 1;
 
-
 int nCallbacks = 0;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
@@ -36,22 +33,17 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
                           const PaStreamCallbackTimeInfo *timeInfo,
                           PaStreamCallbackFlags statusFlags, void *userData) {
 
-
-
-
-
   /* Cast data passed through stream to our structure. */
   paTestData *data = (paTestData *)userData;
   StereoBuffer *out = (StereoBuffer *)outputBuffer;
   unsigned int i;
   (void)inputBuffer; /* Prevent unused variable warning. */
 
-  osc.process(f/2, *out);
+  osc.process(f / 2, *out);
 
-  if(f > 50)
-    f -= 16000/ f;
-  else
-  {
+  if (f > 50)
+    f -= 16000 / f;
+  else {
     f = 200;
     osc.flipPhase();
   }
@@ -59,19 +51,16 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
   clipamount *= .999;
   clip.process(*out, clipamount, *out);
 
-  
-
   return 0;
 }
 
 int wulpWulpWulpWulp() {
   initialiseWavetables();
 
-
   PaError err = Pa_Initialize();
-  if (err != paNoError)
-  {
-    std::cerr << "Port audio error (at initialisation): " << Pa_GetErrorText(err) << "\n";
+  if (err != paNoError) {
+    std::cerr << "Port audio error (at initialisation): "
+              << Pa_GetErrorText(err) << "\n";
     return 1;
   }
 
@@ -80,9 +69,9 @@ int wulpWulpWulpWulp() {
   PaStream *stream;
   /* Open an audio I/O stream. */
   err = Pa_OpenDefaultStream(
-      &stream, 0,       /* no input channels */
-      2,                /* stereo output */
-      paFloat32,        /* 32 bit floating point output */
+      &stream, 0,        /* no input channels */
+      2,                 /* stereo output */
+      paFloat32,         /* 32 bit floating point output */
       SAMPLE_RATE, 2048, /* frames per buffer, i.e. the number
                                of sample frames that PortAudio will
                                request from the callback. Many apps
@@ -90,36 +79,36 @@ int wulpWulpWulpWulp() {
                                paFramesPerBufferUnspecified, which
                                tells PortAudio to pick the best,
                                possibly changing, buffer size.*/
-      patestCallback,   /* this is your callback function */
-      &data);           /*This is a pointer that will be passed to
-                                  your callback*/
-  if (err != paNoError)
-  {
-    std::cerr << "Error opening portaudio stream: " << Pa_GetErrorText(err) << "\n";
+      patestCallback,    /* this is your callback function */
+      &data);            /*This is a pointer that will be passed to
+                                   your callback*/
+  if (err != paNoError) {
+    std::cerr << "Error opening portaudio stream: " << Pa_GetErrorText(err)
+              << "\n";
     return 1;
   }
 
   std::cout << "Opened a port audio stream!!\n";
 
-
-  err = Pa_StartStream( stream );
-  if( err != paNoError ) {
-    std::cerr << "Error starting portaudio stream: " << Pa_GetErrorText(err) << "\n";
+  err = Pa_StartStream(stream);
+  if (err != paNoError) {
+    std::cerr << "Error starting portaudio stream: " << Pa_GetErrorText(err)
+              << "\n";
     return 1;
   }
 
   Pa_Sleep(50000);
 
-
-  err = Pa_StopStream( stream );
-  if( err != paNoError ) {
+  err = Pa_StopStream(stream);
+  if (err != paNoError) {
     std::cerr << "Error stopping stream: " << Pa_GetErrorText(err) << "\n";
     return 1;
   }
 
   err = Pa_Terminate();
-  if (err != paNoError)  {
-    std::cerr << "Port audio error (at termination): " << Pa_GetErrorText(err) << "\n";
+  if (err != paNoError) {
+    std::cerr << "Port audio error (at termination): " << Pa_GetErrorText(err)
+              << "\n";
     return 1;
   }
 

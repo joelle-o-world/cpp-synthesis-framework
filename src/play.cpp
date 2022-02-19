@@ -6,7 +6,7 @@
 #include "AudioProcess.h"
 #include "Circuit.h"
 #include "TypedSignalBuffer.h"
-#include "processes/Osc.h"
+#include "components/Osc.h"
 #include "wavetables.h"
 
 #define SAMPLE_RATE (44100)
