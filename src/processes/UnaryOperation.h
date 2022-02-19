@@ -19,7 +19,7 @@ public:
   }
 
 public:
-  Inlet &in() { return inputs[0]; }
+  Reader &in() { return inputs[0]; }
   Outlet &out() { return outputs[0]; }
 
 private:

@@ -66,7 +66,7 @@ private:
   // outlet.buffer = new TypedSignalBuffer;
   // outlet.buffer->type = Stereo;
   // outlet.buffer->stereo = (StereoBuffer *)(void *)new StereoBuffer;
-  // for (Inlet *inlet : outlet.connectedTo)
+  // for (Reader *inlet : outlet.connectedTo)
   // inlet->buffer = outlet.buffer;
   //}
   //}
@@ -78,7 +78,7 @@ private:
   //// TODO: delete outlet.buffer->stereo
   // delete outlet.buffer;
   // outlet.buffer = nullptr;
-  // for (Inlet *inlet : outlet.connectedTo)
+  // for (Reader *inlet : outlet.connectedTo)
   // inlet->buffer = nullptr;
   //}
   //}
@@ -94,7 +94,7 @@ public:
       out << "  p" << i << " ";
       out << "[label=\"" << p->describe() << "\"]";
       out << "\n";
-      for (Inlet &inlet : p->inputs) {
+      for (Reader &inlet : p->inputs) {
         if (inlet.connectedTo) {
           auto it = std::find(firingOrder.begin(), firingOrder.end(),
                               inlet.connectedTo->owner);
@@ -129,7 +129,7 @@ public:
       std::string label = p->describe() + " (" + ordinal(i) + ")";
       out << "{label:\"" << label << "\"; border: none; }";
       out << "\n";
-      for (Inlet &inlet : p->inputs) {
+      for (Reader &inlet : p->inputs) {
         if (inlet.connectedTo) {
           auto it = std::find(firingOrder.begin(), firingOrder.end(),
                               inlet.connectedTo->owner);

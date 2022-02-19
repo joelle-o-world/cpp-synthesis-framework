@@ -57,7 +57,7 @@ public:
 
 public:
   std::string describe() override { return "Osc"; }
-  Inlet &frequency() { return inputs[0]; }
+  Reader &frequency() { return inputs[0]; }
   Outlet &out() { return outputs[0]; }
 
 private:

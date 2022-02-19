@@ -1,11 +1,11 @@
 #pragma once
 
 #include "AudioProcess.h"
-#include "Inlet.h"
 #include "Outlet.h"
+#include "Reader.h"
 
-void connect(Outlet &from, Inlet &into);
-void connect(AudioProcess &from, Inlet &into);
+void connect(Outlet &from, Reader &into);
+void connect(AudioProcess &from, Reader &into);
 
-void disconnect(Inlet &inlet);
-void connect(float constant, Inlet &inlet);
+void disconnect(Reader &inlet);
+void connect(float constant, Reader &inlet);

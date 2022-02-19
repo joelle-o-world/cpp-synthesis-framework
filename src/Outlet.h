@@ -1,16 +1,16 @@
 #pragma once
 
-#include "./Inlet.h"
+#include "./Reader.h"
 #include "AudioProcess.h"
 #include <set>
 
 class AudioProcess;
 
 class Outlet {
-  friend Inlet;
+  friend Reader;
 
 public:
-  std::set<Inlet *> connectedTo;
+  std::set<Reader *> connectedTo;
   void *bufferptr;
   AudioProcess *owner;
   int deallocationIndex;

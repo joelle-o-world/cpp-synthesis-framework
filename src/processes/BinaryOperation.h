@@ -20,8 +20,8 @@ public:
       processSample(a[i], b[i], out[i]);
   }
 
-  inline Inlet &a() { return inputs[0]; }
-  inline Inlet &b() { return inputs[1]; }
+  inline Reader &a() { return inputs[0]; }
+  inline Reader &b() { return inputs[1]; }
   inline Outlet &out() { return outputs[0]; }
 
 private:

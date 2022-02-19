@@ -1,8 +1,8 @@
 #pragma once
 
 #include "BufferPool.h"
-#include "Inlet.h"
 #include "Outlet.h"
+#include "Reader.h"
 #include "TypedSignalBuffer.h"
 #include <iostream>
 #include <set>
@@ -38,7 +38,7 @@ public:
   const unsigned char numberOfOutputs;
   TriggerState triggerState;
 
-  std::vector<Inlet> inputs;
+  std::vector<Reader> inputs;
   std::vector<Outlet> outputs;
 
   AudioProcess(std::vector<signalType> inputTypes,
@@ -49,18 +49,18 @@ public:
       return;
     } else {
       triggerState = triggered;
-      for (Inlet &input : inputs)
+      for (Reader &input : inputs)
         input.connectedTo->owner->fire();
 
       for (Outlet &outlet : outputs) {
         // outlet.buffer->stereo = nullptr;
         outlet.bufferptr = bufferPool.allocate(outlet.deallocationIndex);
-        for (Inlet *inlet : outlet.connectedTo)
+        for (Reader *inlet : outlet.connectedTo)
           inlet->bufferptr = outlet.bufferptr;
         outlet.readers = outlet.connectedTo.size();
       }
       process();
-      for (Inlet &inlet : inputs) {
+      for (Reader &inlet : inputs) {
         if (--(inlet.connectedTo->readers) == 0) {
           bufferPool.release(inlet.connectedTo->deallocationIndex);
         }
@@ -79,7 +79,7 @@ public:
 
   std::set<AudioProcess *> *dependencies() {
     std::set<AudioProcess *> *set = new std::set<AudioProcess *>;
-    for (Inlet &inlet : inputs)
+    for (Reader &inlet : inputs)
       if (inlet.connectedTo)
         set->insert(inlet.connectedTo->owner);
     return set;

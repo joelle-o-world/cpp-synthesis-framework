@@ -5,7 +5,7 @@
 class Outlet;
 class AudioProcess;
 
-class Inlet {
+class Reader {
 public:
   void *bufferptr;
   AudioProcess *owner;
@@ -13,7 +13,7 @@ public:
   bool isConstant;
   signalType signalType;
 
-  Inlet() {
+  Reader() {
     connectedTo = nullptr;
     owner = nullptr;
     isConstant = false;
