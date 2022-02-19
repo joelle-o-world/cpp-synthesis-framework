@@ -1,7 +1,7 @@
 #include "connect.h"
 #include "processes/Constant.h"
 
-void connect(Outlet &outlet, Reader &inlet) {
+void connect(Writer &outlet, Reader &inlet) {
   disconnect(inlet);
   inlet.connectedTo = &outlet;
   outlet.connectedTo.insert(&inlet);

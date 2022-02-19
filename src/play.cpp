@@ -12,7 +12,7 @@
 #define SAMPLE_RATE (44100)
 
 typedef struct {
-  Outlet *output;
+  Writer *output;
 } paTestData;
 
 static paTestData data;
@@ -39,7 +39,7 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
   return 0;
 }
 
-int play(Outlet &outlet, float duration = 5) {
+int play(Writer &outlet, float duration = 5) {
   // circuit.prepare();
   data = {&outlet};
   PaError err = Pa_Initialize();

@@ -22,7 +22,7 @@ public:
 
   inline Reader &a() { return inputs[0]; }
   inline Reader &b() { return inputs[1]; }
-  inline Outlet &out() { return outputs[0]; }
+  inline Writer &out() { return outputs[0]; }
 
 private:
   inline float *A() { return (float *)a().bufferptr; }

@@ -6,7 +6,7 @@
 
 class AudioProcess;
 
-class Outlet {
+class Writer {
   friend Reader;
 
 public:
@@ -17,7 +17,7 @@ public:
   signalType signalType;
   /// The number of inputs waiting to read this outlet's buffer.
   int readers;
-  Outlet() {
+  Writer() {
     readers = 0;
     deallocationIndex = -1;
     signalType = nodata;

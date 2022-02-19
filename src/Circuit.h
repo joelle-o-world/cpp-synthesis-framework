@@ -62,7 +62,7 @@ private:
   //// TODO: This could be optimised with a buffer pool
   // for (AudioProcess *node : firingOrder) {
   // std::cout << "allocating buffer for " << node->describe() << "\n";
-  // for (Outlet &outlet : node->outputs) {
+  // for (Writer &outlet : node->outputs) {
   // outlet.buffer = new TypedSignalBuffer;
   // outlet.buffer->type = Stereo;
   // outlet.buffer->stereo = (StereoBuffer *)(void *)new StereoBuffer;
@@ -74,7 +74,7 @@ private:
 
   // void deallocateBuffers() {
   // for (AudioProcess *node : firingOrder)
-  // for (Outlet &outlet : node->outputs) {
+  // for (Writer &outlet : node->outputs) {
   //// TODO: delete outlet.buffer->stereo
   // delete outlet.buffer;
   // outlet.buffer = nullptr;

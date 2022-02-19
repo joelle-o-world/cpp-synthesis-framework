@@ -20,7 +20,7 @@ public:
 
 public:
   Reader &in() { return inputs[0]; }
-  Outlet &out() { return outputs[0]; }
+  Writer &out() { return outputs[0]; }
 
 private:
   float *IN() { return (float *)in().bufferptr; }

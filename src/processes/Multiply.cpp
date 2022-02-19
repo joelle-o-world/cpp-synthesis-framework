@@ -20,31 +20,31 @@ Multiply &multiply(AudioProcess &a, float b) {
   connect(b, p->b());
   return *p;
 };
-Multiply &multiply(Outlet &a, AudioProcess &b) {
+Multiply &multiply(Writer &a, AudioProcess &b) {
   Multiply *p = new Multiply();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Multiply &multiply(AudioProcess &a, Outlet &b) {
+Multiply &multiply(AudioProcess &a, Writer &b) {
   Multiply *p = new Multiply();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Multiply &multiply(Outlet &a, Outlet &b) {
+Multiply &multiply(Writer &a, Writer &b) {
   Multiply *p = new Multiply();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Multiply &multiply(float a, Outlet &b) {
+Multiply &multiply(float a, Writer &b) {
   Multiply *p = new Multiply();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Multiply &multiply(Outlet &a, float b) {
+Multiply &multiply(Writer &a, float b) {
   Multiply *p = new Multiply();
   connect(a, p->a());
   connect(b, p->b());
@@ -54,8 +54,8 @@ Multiply &multiply(Outlet &a, float b) {
 Multiply &operator*(AudioProcess &a, AudioProcess &b) { return multiply(a, b); }
 Multiply &operator*(float a, AudioProcess &b) { return multiply(a, b); };
 Multiply &operator*(AudioProcess &a, float b) { return multiply(a, b); };
-Multiply &operator*(Outlet &a, AudioProcess &b) { return multiply(a, b); };
-Multiply &operator*(AudioProcess &a, Outlet &b) { return multiply(a, b); };
-Multiply &operator*(Outlet &a, Outlet &b) { return multiply(a, b); };
-Multiply &operator*(float a, Outlet &b) { return multiply(a, b); };
-Multiply &operator*(Outlet &a, float b) { return multiply(a, b); };
+Multiply &operator*(Writer &a, AudioProcess &b) { return multiply(a, b); };
+Multiply &operator*(AudioProcess &a, Writer &b) { return multiply(a, b); };
+Multiply &operator*(Writer &a, Writer &b) { return multiply(a, b); };
+Multiply &operator*(float a, Writer &b) { return multiply(a, b); };
+Multiply &operator*(Writer &a, float b) { return multiply(a, b); };

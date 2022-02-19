@@ -21,31 +21,31 @@ Divide &divide(AudioProcess &a, float b) {
   connect(b, p->b());
   return *p;
 };
-Divide &divide(Outlet &a, AudioProcess &b) {
+Divide &divide(Writer &a, AudioProcess &b) {
   Divide *p = new Divide();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Divide &divide(AudioProcess &a, Outlet &b) {
+Divide &divide(AudioProcess &a, Writer &b) {
   Divide *p = new Divide();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Divide &divide(Outlet &a, Outlet &b) {
+Divide &divide(Writer &a, Writer &b) {
   Divide *p = new Divide();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Divide &divide(float a, Outlet &b) {
+Divide &divide(float a, Writer &b) {
   Divide *p = new Divide();
   connect(a, p->a());
   connect(b, p->b());
   return *p;
 };
-Divide &divide(Outlet &a, float b) {
+Divide &divide(Writer &a, float b) {
   Divide *p = new Divide();
   connect(a, p->a());
   connect(b, p->b());
@@ -55,8 +55,8 @@ Divide &divide(Outlet &a, float b) {
 Divide &operator/(AudioProcess &a, AudioProcess &b) { return divide(a, b); }
 Divide &operator/(float a, AudioProcess &b) { return divide(a, b); };
 Divide &operator/(AudioProcess &a, float b) { return divide(a, b); };
-Divide &operator/(Outlet &a, AudioProcess &b) { return divide(a, b); };
-Divide &operator/(AudioProcess &a, Outlet &b) { return divide(a, b); };
-Divide &operator/(Outlet &a, Outlet &b) { return divide(a, b); };
-Divide &operator/(float a, Outlet &b) { return divide(a, b); };
-Divide &operator/(Outlet &a, float b) { return divide(a, b); };
+Divide &operator/(Writer &a, AudioProcess &b) { return divide(a, b); };
+Divide &operator/(AudioProcess &a, Writer &b) { return divide(a, b); };
+Divide &operator/(Writer &a, Writer &b) { return divide(a, b); };
+Divide &operator/(float a, Writer &b) { return divide(a, b); };
+Divide &operator/(Writer &a, float b) { return divide(a, b); };

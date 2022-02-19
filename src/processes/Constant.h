@@ -15,7 +15,7 @@ public:
     }
   }
 
-  Outlet &out() { return outputs[0]; }
+  Writer &out() { return outputs[0]; }
 
   std::string describe() override { return std::to_string(value); }
 

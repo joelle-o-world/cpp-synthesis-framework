@@ -1,9 +1,9 @@
 #pragma once
 
 #include "BufferPool.h"
-#include "Outlet.h"
 #include "Reader.h"
 #include "TypedSignalBuffer.h"
+#include "Writer.h"
 #include <iostream>
 #include <set>
 #include <string>
@@ -39,7 +39,7 @@ public:
   TriggerState triggerState;
 
   std::vector<Reader> inputs;
-  std::vector<Outlet> outputs;
+  std::vector<Writer> outputs;
 
   AudioProcess(std::vector<signalType> inputTypes,
                std::vector<signalType> outputTypes);
@@ -52,7 +52,7 @@ public:
       for (Reader &input : inputs)
         input.connectedTo->owner->fire();
 
-      for (Outlet &outlet : outputs) {
+      for (Writer &outlet : outputs) {
         // outlet.buffer->stereo = nullptr;
         outlet.bufferptr = bufferPool.allocate(outlet.deallocationIndex);
         for (Reader *inlet : outlet.connectedTo)

@@ -58,7 +58,7 @@ public:
 public:
   std::string describe() override { return "Osc"; }
   Reader &frequency() { return inputs[0]; }
-  Outlet &out() { return outputs[0]; }
+  Writer &out() { return outputs[0]; }
 
 private:
   float *FREQUENCY() { return (float *)frequency().bufferptr; }

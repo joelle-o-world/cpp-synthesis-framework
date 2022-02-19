@@ -2,14 +2,14 @@
 
 #include "signalType.h"
 
-class Outlet;
+class Writer;
 class AudioProcess;
 
 class Reader {
 public:
   void *bufferptr;
   AudioProcess *owner;
-  Outlet *connectedTo;
+  Writer *connectedTo;
   bool isConstant;
   signalType signalType;
 

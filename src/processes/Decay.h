@@ -34,7 +34,7 @@ public:
   }
 
   Reader &halfLife() { return inputs[0]; }
-  Outlet &out() { return outputs[0]; }
+  Writer &out() { return outputs[0]; }
 
 private:
   float *HALFLIFE() { return (float *)halfLife().bufferptr; }
