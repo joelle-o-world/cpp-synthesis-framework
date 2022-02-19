@@ -3,7 +3,7 @@
 #include <math.h>
 #include <portaudio.h>
 
-#include "../AudioProcess.h"
+#include "../Component.h"
 #include "../components.h"
 #include "../wavetables.h"
 

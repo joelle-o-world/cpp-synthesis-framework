@@ -1,5 +1,5 @@
 #pragma once
-#include "../AudioProcess.h"
+#include "../Component.h"
 #include "../connect.h"
 #include "../wavetables.h"
 #include <iostream>
@@ -8,7 +8,7 @@
 /**
  * Simple k/a-rate frequency wavetable oscillator.
  */
-class Osc : public AudioProcess {
+class Osc : public Component {
   float phase = 0;
   float rightPhase = 0;
 
@@ -24,7 +24,7 @@ public:
     rightPhase = r;
   }
 
-  Osc() : AudioProcess({stereo}, {stereo}) {}
+  Osc() : Component({stereo}, {stereo}) {}
 
   // a-rate stereo mode
   void process() override {
@@ -64,4 +64,4 @@ public:
 };
 
 Osc &osc(float frequency);
-Osc &osc(AudioProcess &frequency);
+Osc &osc(Component &frequency);

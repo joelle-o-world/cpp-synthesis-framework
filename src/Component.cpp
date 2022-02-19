@@ -1,7 +1,7 @@
-#include "AudioProcess.h"
+#include "Component.h"
 
-AudioProcess::AudioProcess(std::vector<signalType> inputTypes,
-                           std::vector<signalType> outputTypes)
+Component::Component(std::vector<signalType> inputTypes,
+                     std::vector<signalType> outputTypes)
     : numberOfInputs(inputTypes.size()), numberOfOutputs(outputTypes.size()),
       triggerState(done) {
 
@@ -18,4 +18,4 @@ AudioProcess::AudioProcess(std::vector<signalType> inputTypes,
   }
 }
 
-BufferPool<float, 4096> AudioProcess::bufferPool;
+BufferPool<float, 4096> Component::bufferPool;

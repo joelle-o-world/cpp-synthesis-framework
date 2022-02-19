@@ -7,7 +7,7 @@ void connect(UntypedWriter &outlet, UntypedReader &inlet) {
   outlet.connectedTo.insert(&inlet);
 }
 
-void connect(AudioProcess &from, UntypedReader &into) {
+void connect(Component &from, UntypedReader &into) {
   connect(from.outputs[0], into);
 }
 

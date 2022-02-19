@@ -15,7 +15,7 @@ class SemitoneToRatio : public UnaryOperation {
 };
 
 float st(float semitones);
-SemitoneToRatio &st(AudioProcess &semitones);
+SemitoneToRatio &st(Component &semitones);
 
 float pitch(float midiPitch);
-MTF &pitch(AudioProcess &midiPitch);
+MTF &pitch(Component &midiPitch);

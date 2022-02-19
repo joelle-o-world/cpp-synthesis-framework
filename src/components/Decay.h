@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../AudioProcess.h"
+#include "../Component.h"
 #include <math.h>
 #include <string>
 
@@ -9,7 +9,7 @@ const float logHalf = log(.5);
 // TODO: split this class into three classes, Decay and HalfLife and
 // RecursiveMultiplier
 
-class Decay : public AudioProcess {
+class Decay : public Component {
   // internal state
   float level;
   float rightLevel;
@@ -19,7 +19,7 @@ class Decay : public AudioProcess {
   };
 
 public:
-  Decay() : AudioProcess({stereo}, {stereo}) { retrigger(); }
+  Decay() : Component({stereo}, {stereo}) { retrigger(); }
   std::string describe() override { return "Decay"; }
 
   void retrigger() { level = rightLevel = 1.0; }
@@ -38,4 +38,4 @@ public:
 };
 
 Decay &decay(float halfLife);
-Decay &decay(AudioProcess &halfLife);
+Decay &decay(Component &halfLife);

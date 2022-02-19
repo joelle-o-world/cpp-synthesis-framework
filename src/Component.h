@@ -19,18 +19,18 @@ typedef enum { triggered, done } TriggerState;
 /**
  * Base class for audio processes.
  *
- * The sub classes of AudioProcess implement the actual transformation of audio
+ * The sub classes of Component implement the actual transformation of audio
  * buffers. This is done by overiding the virtual `process()` method. These
  * classes also contain memory addresses of the buffers they read from write
  * too. They may also contain internal state data that needs to carry forward
  * accross cycles.
  *
- * AudioProcess sub-classes should be extremely minimal and do not contain some
+ * Component sub-classes should be extremely minimal and do not contain some
  * pieces of information that may be surprising. Number of inlets, outlets and
  * the size and format of their buffers is the domain of the
- * AudioProcessCoordinator subclasses.
+ * Component subclasses.
  */
-class AudioProcess {
+class Component {
 
 public:
   static BufferPool<float, 4096> bufferPool;
@@ -41,8 +41,8 @@ public:
   std::vector<UntypedReader> inputs;
   std::vector<UntypedWriter> outputs;
 
-  AudioProcess(std::vector<signalType> inputTypes,
-               std::vector<signalType> outputTypes);
+  Component(std::vector<signalType> inputTypes,
+            std::vector<signalType> outputTypes);
 
   void fire() {
     if (triggerState == triggered) {
@@ -77,13 +77,13 @@ public:
       // Base class does nothing
   };
 
-  std::set<AudioProcess *> *dependencies() {
-    std::set<AudioProcess *> *set = new std::set<AudioProcess *>;
+  std::set<Component *> *dependencies() {
+    std::set<Component *> *set = new std::set<Component *>;
     for (UntypedReader &inlet : inputs)
       if (inlet.connectedTo)
         set->insert(inlet.connectedTo->owner);
     return set;
   }
 
-  virtual std::string describe() { return "unnamed AudioProcess"; }
+  virtual std::string describe() { return "unnamed Component"; }
 };

@@ -3,8 +3,8 @@
 #include <math.h>
 #include <portaudio.h>
 
-#include "AudioProcess.h"
 #include "Circuit.h"
+#include "Component.h"
 #include "TypedSignalBuffer.h"
 #include "components/Osc.h"
 #include "wavetables.h"
@@ -34,7 +34,7 @@ static int patestCallback(const void *inputBuffer, void *outputBuffer,
   data->output->owner->fire();
 
   copyData((float *)data->output->bufferptr, out);
-  AudioProcess::bufferPool.release(data->output->deallocationIndex);
+  Component::bufferPool.release(data->output->deallocationIndex);
 
   return 0;
 }
@@ -101,4 +101,4 @@ int play(UntypedWriter &outlet, float duration = 5) {
   return 0;
 }
 
-void play(AudioProcess &p, float duration = 5) { play(p.outputs[0], duration); }
+void play(Component &p, float duration = 5) { play(p.outputs[0], duration); }

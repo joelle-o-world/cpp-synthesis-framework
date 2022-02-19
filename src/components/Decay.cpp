@@ -6,7 +6,7 @@ Decay &decay(float halfLife) {
   connect(halfLife, p->inputs[0]);
   return *p;
 }
-Decay &decay(AudioProcess &halfLife) {
+Decay &decay(Component &halfLife) {
   Decay *p = new Decay;
   connect(halfLife, p->inputs[0]);
   return *p;

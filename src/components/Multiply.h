@@ -14,20 +14,20 @@ private:
   }
 };
 
-Multiply &multiply(AudioProcess &a, AudioProcess &b);
-Multiply &multiply(float a, AudioProcess &b);
-Multiply &multiply(AudioProcess &a, float b);
-Multiply &multiply(UntypedWriter &a, AudioProcess &b);
-Multiply &multiply(AudioProcess &a, UntypedWriter &b);
+Multiply &multiply(Component &a, Component &b);
+Multiply &multiply(float a, Component &b);
+Multiply &multiply(Component &a, float b);
+Multiply &multiply(UntypedWriter &a, Component &b);
+Multiply &multiply(Component &a, UntypedWriter &b);
 Multiply &multiply(UntypedWriter &a, UntypedWriter &b);
 Multiply &multiply(float a, UntypedWriter &b);
 Multiply &multiply(UntypedWriter &a, float b);
 
-Multiply &operator*(AudioProcess &a, AudioProcess &b);
-Multiply &operator*(float a, AudioProcess &b);
-Multiply &operator*(AudioProcess &a, float b);
-Multiply &operator*(UntypedWriter &a, AudioProcess &b);
-Multiply &operator*(AudioProcess &a, UntypedWriter &b);
+Multiply &operator*(Component &a, Component &b);
+Multiply &operator*(float a, Component &b);
+Multiply &operator*(Component &a, float b);
+Multiply &operator*(UntypedWriter &a, Component &b);
+Multiply &operator*(Component &a, UntypedWriter &b);
 Multiply &operator*(UntypedWriter &a, UntypedWriter &b);
 Multiply &operator*(float a, UntypedWriter &b);
 Multiply &operator*(UntypedWriter &a, float b);

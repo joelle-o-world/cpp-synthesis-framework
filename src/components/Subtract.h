@@ -8,20 +8,20 @@ private:
   }
 };
 
-Subtract &subtract(AudioProcess &a, AudioProcess &b);
-Subtract &subtract(float a, AudioProcess &b);
-Subtract &subtract(AudioProcess &a, float b);
-Subtract &subtract(UntypedWriter &a, AudioProcess &b);
-Subtract &subtract(AudioProcess &a, UntypedWriter &b);
+Subtract &subtract(Component &a, Component &b);
+Subtract &subtract(float a, Component &b);
+Subtract &subtract(Component &a, float b);
+Subtract &subtract(UntypedWriter &a, Component &b);
+Subtract &subtract(Component &a, UntypedWriter &b);
 Subtract &subtract(UntypedWriter &a, UntypedWriter &b);
 Subtract &subtract(float a, UntypedWriter &b);
 Subtract &subtract(UntypedWriter &a, float b);
 
-Subtract &operator-(AudioProcess &a, AudioProcess &b);
-Subtract &operator-(float a, AudioProcess &b);
-Subtract &operator-(AudioProcess &a, float b);
-Subtract &operator-(UntypedWriter &a, AudioProcess &b);
-Subtract &operator-(AudioProcess &a, UntypedWriter &b);
+Subtract &operator-(Component &a, Component &b);
+Subtract &operator-(float a, Component &b);
+Subtract &operator-(Component &a, float b);
+Subtract &operator-(UntypedWriter &a, Component &b);
+Subtract &operator-(Component &a, UntypedWriter &b);
 Subtract &operator-(UntypedWriter &a, UntypedWriter &b);
 Subtract &operator-(float a, UntypedWriter &b);
 Subtract &operator-(UntypedWriter &a, float b);

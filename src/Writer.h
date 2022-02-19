@@ -1,10 +1,10 @@
 #pragma once
 
 #include "./Reader.h"
-#include "AudioProcess.h"
+#include "Component.h"
 #include <set>
 
-class AudioProcess;
+class Component;
 
 class UntypedWriter {
   friend UntypedReader;
@@ -12,7 +12,7 @@ class UntypedWriter {
 public:
   std::set<UntypedReader *> connectedTo;
   void *bufferptr;
-  AudioProcess *owner;
+  Component *owner;
   int deallocationIndex;
   signalType signalType;
   /// The number of inputs waiting to read this outlet's buffer.

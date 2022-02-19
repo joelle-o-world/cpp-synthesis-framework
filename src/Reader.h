@@ -3,12 +3,12 @@
 #include "signalType.h"
 
 class UntypedWriter;
-class AudioProcess;
+class Component;
 
 class UntypedReader {
 public:
   void *bufferptr;
-  AudioProcess *owner;
+  Component *owner;
   UntypedWriter *connectedTo;
   bool isConstant;
   signalType signalType;

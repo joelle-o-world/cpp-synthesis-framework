@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../AudioProcess.h"
+#include "../Component.h"
 #include <string>
 
-class Constant : public AudioProcess {
+class Constant : public Component {
 public:
   float value;
-  Constant(float value) : AudioProcess({}, {stereo}), value(value) {}
+  Constant(float value) : Component({}, {stereo}), value(value) {}
 
   void process() override {
     auto OUT = out().data();

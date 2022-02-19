@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AudioProcess.h"
+#include "Component.h"
 #include "TypedSignalBuffer.h"
 #include "utils/ordinal.h"
 #include <algorithm>
@@ -14,16 +14,16 @@
 
 class Circuit {
 private:
-  AudioProcess *exitNode;
-  std::vector<AudioProcess *> firingOrder;
+  Component *exitNode;
+  std::vector<Component *> firingOrder;
 
 public:
-  Circuit(AudioProcess *exitNode) : exitNode(exitNode) {}
-  Circuit(AudioProcess &exitNode) : exitNode(&exitNode) {}
+  Circuit(Component *exitNode) : exitNode(exitNode) {}
+  Circuit(Component &exitNode) : exitNode(&exitNode) {}
   //~Circuit() { deallocateBuffers(); }
 
   void process() {
-    for (AudioProcess *node : firingOrder) {
+    for (Component *node : firingOrder) {
       std::cout << "Firing " << node->describe() << "\n";
       node->process();
     }
@@ -41,12 +41,12 @@ private:
    * Recalculates the firing order for all nodes and saves to `firingOrder`
    * property.
    */
-  std::vector<AudioProcess *> &refreshFiringOrder() {
+  std::vector<Component *> &refreshFiringOrder() {
     firingOrder.clear();
     firingOrder.push_back(exitNode);
     for (int i = 0; i < firingOrder.size(); ++i) {
-      std::set<AudioProcess *> *dependencies = firingOrder[i]->dependencies();
-      for (AudioProcess *dependency : *dependencies) {
+      std::set<Component *> *dependencies = firingOrder[i]->dependencies();
+      for (Component *dependency : *dependencies) {
         if (std::find(firingOrder.begin(), firingOrder.end(), dependency) ==
             firingOrder.end()) {
           firingOrder.push_back(dependency);
@@ -60,7 +60,7 @@ private:
 
   // void allocateBuffers() {
   //// TODO: This could be optimised with a buffer pool
-  // for (AudioProcess *node : firingOrder) {
+  // for (Component *node : firingOrder) {
   // std::cout << "allocating buffer for " << node->describe() << "\n";
   // for (Writer &outlet : node->outputs) {
   // outlet.buffer = new TypedSignalBuffer;
@@ -73,7 +73,7 @@ private:
   //}
 
   // void deallocateBuffers() {
-  // for (AudioProcess *node : firingOrder)
+  // for (Component *node : firingOrder)
   // for (Writer &outlet : node->outputs) {
   //// TODO: delete outlet.buffer->stereo
   // delete outlet.buffer;
@@ -89,7 +89,7 @@ public:
     out << "digraph {\n";
     out << "  p0 -> adac\n";
     for (int i = 0; i < firingOrder.size(); ++i) {
-      AudioProcess *p = firingOrder[i];
+      Component *p = firingOrder[i];
       std::string iname = "p" + std::to_string(i);
       out << "  p" << i << " ";
       out << "[label=\"" << p->describe() << "\"]";
@@ -123,7 +123,7 @@ public:
     int constantCount = 0;
     out << "[ p" << (firingOrder.size() - 1) << " ] -> [ OUT ] {border:none}\n";
     for (int i = 0; i < firingOrder.size(); ++i) {
-      AudioProcess *p = firingOrder[i];
+      Component *p = firingOrder[i];
       std::string iname = "[ p" + std::to_string(i) + " ]";
       out << iname << " ";
       std::string label = p->describe() + " (" + ordinal(i) + ")";

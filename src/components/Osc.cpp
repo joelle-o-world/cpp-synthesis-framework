@@ -6,7 +6,7 @@ Osc &osc(float frequency) {
   connect(frequency, p->inputs[0]);
   return *p;
 }
-Osc &osc(AudioProcess &frequency) {
+Osc &osc(Component &frequency) {
   Osc *p = new Osc();
   p->waveform = &sineWavetable;
   connect(frequency, p->inputs[0]);

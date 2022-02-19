@@ -1,9 +1,9 @@
 #pragma once
-#include "../AudioProcess.h"
+#include "../Component.h"
 
-class BinaryOperation : public AudioProcess {
+class BinaryOperation : public Component {
 public:
-  BinaryOperation() : AudioProcess({stereo, stereo}, {stereo}) {}
+  BinaryOperation() : Component({stereo, stereo}, {stereo}) {}
 
 private:
   virtual inline void processSample(float &a, float &b, float &out) {
